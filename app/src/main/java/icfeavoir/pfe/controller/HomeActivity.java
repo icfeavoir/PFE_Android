@@ -3,6 +3,7 @@ package icfeavoir.pfe.controller;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,9 +14,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import icfeavoir.pfe.R;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+import java.util.ArrayList;
+
+import icfeavoir.pfe.R;
+import icfeavoir.pfe.proxy.LOGONProxy;
+import icfeavoir.pfe.proxy.MYJURProxy;
+
+public class HomeActivity extends PFEActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,5 +104,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void displayData(ArrayList<?> data) {
+        for (Object o : data) {
+            Log.i("PFE DATA", o.toString());
+        }
     }
 }
