@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import icfeavoir.pfe.controller.PFEActivity;
+import icfeavoir.pfe.model.User;
 import icfeavoir.pfe.utils.Utils;
 
 public abstract class Proxy {
@@ -16,12 +17,20 @@ public abstract class Proxy {
 
     public Proxy(PFEActivity activity) {
         this.activity = activity;
-        Log.i("PFE", "Proxy created");
     }
 
     public void getData(JSONObject json) {
         if (Utils.isConnected(activity.getApplicationContext())) {
             // internet connection
+            // add token is exists
+            User user = User.getInstance();
+            if (user.getToken() != null && user.getUsername() != null) {
+                try {
+                    json.put("user", user.getUsername());
+                    json.put("token", user.getToken());
+                } catch (JSONException e) {
+                }
+            }
             this.getDataFromInternet(json);
         } else {
             // no internet connection
@@ -29,7 +38,7 @@ public abstract class Proxy {
         }
     }
 
-    public PFEActivity getActivity() {
+    PFEActivity getActivity() {
         return activity;
     }
 
@@ -41,5 +50,18 @@ public abstract class Proxy {
     abstract void getDataWithoutInternet(JSONObject json);
     abstract void saveDataFromInternet(ArrayList<?> elements);
 
-    public abstract void returnData(JSONObject json);
+    public void checkDataAfterInternet(JSONObject json) {
+        try {
+            String result = json.getString("result");
+            if (result.equals("OK")) {
+                this.returnDataAfterInternet(json);
+            }
+        } catch (JSONException e) {
+            Log.e("PROXY", "No result found");
+        }
+    }
+
+    public abstract void returnDataAfterInternet(JSONObject json);
+
+    abstract void sendDataToController(ArrayList<?> elements);
 }

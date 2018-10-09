@@ -7,7 +7,6 @@ public class Project {
 
     private int projectId;
     private String title;
-    private String description;
     private int confid;
     private boolean poster;
     private String supervisor;
@@ -16,9 +15,8 @@ public class Project {
         try {
             int projectId = projectObject.getInt("projectId");
             String title = projectObject.getString("title");
-            String description = projectObject.getString("description");
-            int confid = projectObject.getInt("projectId");
-            boolean poster = projectObject.getBoolean("projectId");
+            int confid = projectObject.getInt("confid");
+            boolean poster = projectObject.getBoolean("poster");
             String supervisor = projectObject.getJSONObject("supervisor").getString("forename") + " " + projectObject.getJSONObject("supervisor").getString("surname");
             this.projectId = projectId;
         } catch (JSONException e) {
@@ -44,14 +42,6 @@ public class Project {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public int isConfid() {

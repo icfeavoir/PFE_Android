@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,19 +24,27 @@ public class MYJURProxy extends Proxy {
 
     @Override
     void getDataFromInternet(JSONObject json) {
-        Log.i("PFE", "Proxy calls with internet");
         // call the communication class and give "this" to enable the callback
         MYJURCommunication com = new MYJURCommunication(this.getContext(), this);
         // empty JSON for all data
-        com.getData(new JSONObject());
+        com.getData(json);
     }
 
     @Override
     void getDataWithoutInternet(JSONObject json) {
-        Log.i("PFE", "Proxy calls without internet");
+        ArrayList<Jury> allJuries = new ArrayList<>();
         // call the database
         try {
-            Database.getInstance(this.getContext()).getJuryDAO().getAllJuries();
+            List<JuryDBModel> juries = Database.getInstance(this.getContext()).getJuryDAO().getAllJuries();
+            // convert JuryDB in Jury
+            Jury jury;
+            for (JuryDBModel juryDB : juries) {
+                jury = new Jury(juryDB.getJuryId(), juryDB.getDate());
+                allJuries.add(jury);
+            }
+
+            // display data
+            this.sendDataToController(allJuries);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -49,7 +58,7 @@ public class MYJURProxy extends Proxy {
         for (Object obj : elements) {
             try {
                 jury = (Jury) obj;
-                juriesDB.add(new JuryDBModel(jury.getJuryId(), jury.getDate().toString()));
+                juriesDB.add(new JuryDBModel(jury.getJuryId(), jury.getDate()));
             } catch (Exception e){
                 e.printStackTrace();
             }
@@ -63,7 +72,7 @@ public class MYJURProxy extends Proxy {
     * Callback when retrieving data from the Internet
      */
     @Override
-    public void returnData(JSONObject json) {
+    public void returnDataAfterInternet(JSONObject json) {
         ArrayList<Jury> alJuries = new ArrayList<>();
         Jury jury = null;
         try {
@@ -80,9 +89,19 @@ public class MYJURProxy extends Proxy {
         }
 
         // at the end we display data
-        this.getActivity().displayData(alJuries);
+        this.sendDataToController(alJuries);
 
         // and we save everything in the db
         this.saveDataFromInternet(alJuries);
+    }
+
+    @Override
+    void sendDataToController(ArrayList<?> elements) {
+        try {
+            ArrayList<Jury> juries = (ArrayList<Jury>) elements;
+            this.getActivity().displayData(juries);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
