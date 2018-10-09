@@ -1,6 +1,7 @@
 package icfeavoir.pfe.database.dao;
 
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
@@ -19,4 +20,10 @@ public interface JuryDAO {
 
     @Insert
     void insert(List<JuryDBModel> juries);
+
+    @Insert
+    void insert(JuryDBModel jury);
+
+    @Query("DELETE FROM JuryDBModel where juryId=:juryId")
+    void delete(int juryId);
 }

@@ -7,25 +7,32 @@ public class Project {
 
     private int projectId;
     private String title;
+    private String description;
     private int confid;
     private boolean poster;
     private String supervisor;
 
     public Project(JSONObject projectObject) {
         try {
-            int projectId = projectObject.getInt("projectId");
-            String title = projectObject.getString("title");
-            int confid = projectObject.getInt("confid");
-            boolean poster = projectObject.getBoolean("poster");
-            String supervisor = projectObject.getJSONObject("supervisor").getString("forename") + " " + projectObject.getJSONObject("supervisor").getString("surname");
+            int projectId = projectObject.has("projectId") ? projectObject.getInt("projectId") : 0;
+            String title = projectObject.has("title") ? projectObject.getString("title") : "";
+            String description = projectObject.has("description") ? projectObject.getString("description") : "";
+            int confid = projectObject.has("confid") ? projectObject.getInt("confid") : 0;
+            boolean poster = projectObject.has("poster") ? projectObject.getBoolean("poster") : false;
+            String supervisor = projectObject.has("supervisor") ? (projectObject.getJSONObject("supervisor").getString("forename") + " " + projectObject.getJSONObject("supervisor").getString("surname")) : "";
             this.projectId = projectId;
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public Project(int projectId) {
+    public Project(int projectId, String title, String description, int confid, boolean poster, String supervisor) {
         this.projectId = projectId;
+        this.title = title;
+        this.description = description;
+        this.confid = confid;
+        this.poster = poster;
+        this.supervisor = supervisor;
     }
 
     public int getProjectId() {
@@ -44,7 +51,7 @@ public class Project {
         this.title = title;
     }
 
-    public int isConfid() {
+    public int getConfid() {
         return confid;
     }
 
@@ -52,7 +59,7 @@ public class Project {
         this.confid = confid;
     }
 
-    public boolean isPoster() {
+    public boolean hasPoster() {
         return poster;
     }
 
@@ -66,5 +73,13 @@ public class Project {
 
     public void setSupervisor(String supervisor) {
         this.supervisor = supervisor;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

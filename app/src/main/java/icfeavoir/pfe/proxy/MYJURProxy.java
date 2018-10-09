@@ -8,13 +8,17 @@ import org.json.JSONObject;
 
 import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import icfeavoir.pfe.communication.MYJURCommunication;
 import icfeavoir.pfe.controller.PFEActivity;
 import icfeavoir.pfe.database.Database;
 import icfeavoir.pfe.database.model.JuryDBModel;
+import icfeavoir.pfe.database.model.ProjectDBModel;
 import icfeavoir.pfe.model.Jury;
+import icfeavoir.pfe.model.Project;
 
 public class MYJURProxy extends Proxy {
 
@@ -32,40 +36,76 @@ public class MYJURProxy extends Proxy {
 
     @Override
     void getDataWithoutInternet(JSONObject json) {
-        ArrayList<Jury> allJuries = new ArrayList<>();
-        // call the database
-        try {
-            List<JuryDBModel> juries = Database.getInstance(this.getContext()).getJuryDAO().getAllJuries();
-            // convert JuryDB in Jury
-            Jury jury;
-            for (JuryDBModel juryDB : juries) {
-                jury = new Jury(juryDB.getJuryId(), juryDB.getDate());
-                allJuries.add(jury);
-            }
+        final ArrayList<Jury> allJuries = new ArrayList<>();
+        // save data in DB with new Thread
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // call the database
+                try {
+                    List<JuryDBModel> juries = Database.getInstance(getContext()).getJuryDAO().getAllJuries();
+                    // convert JuryDB in Jury
+                    Jury jury;
+                    Project project;
+                    for (JuryDBModel juryDB : juries) {
+                        jury = new Jury(juryDB.getJuryId(), juryDB.getDate());
+                        // find projects
+                        List<ProjectDBModel> projects = Database.getInstance(getContext()).getProjectDAO().getProjectByJury(jury.getJuryId());
+                        for (ProjectDBModel projectDB : projects) {
+                            project = new Project(projectDB.getProjectId(), projectDB.getTitle(), projectDB.getDescription(), projectDB.getConfid(), projectDB.hasPoster(), projectDB.getSupervisor());
+                            jury.addProject(project);
+                        }
 
-            // display data
-            this.sendDataToController(allJuries);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+                        allJuries.add(jury);
+                    }
+
+                    // display data
+                    sendDataToController(allJuries);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     @Override
     public void saveDataFromInternet(ArrayList<?> elements) {
         Jury jury;
-        List<JuryDBModel> juriesDB = new ArrayList<>();
+        final List<JuryDBModel> juriesDB = new ArrayList<>();
+        final List<ProjectDBModel> projectsDB = new ArrayList<>();
+
         // convert every Jury in JuryDB
         for (Object obj : elements) {
             try {
                 jury = (Jury) obj;
                 juriesDB.add(new JuryDBModel(jury.getJuryId(), jury.getDate()));
+
+                // convert every Project in ProjectDB
+                for (Map.Entry<Integer, Project> entry : jury.getProjects().entrySet()) {
+                    Project project = entry.getValue();
+                    projectsDB.add(new ProjectDBModel(project.getProjectId(), project.getTitle(), project.getDescription(), project.getConfid(), project.hasPoster(), project.getSupervisor(), jury.getJuryId()));
+                }
             } catch (Exception e){
                 e.printStackTrace();
             }
-
-            // save data in DB
-            Database.getInstance(this.getContext()).getJuryDAO().insert(juriesDB);
         }
+
+        // save data in DB with new Thread
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // delete and resave to have the last values
+                for (JuryDBModel jury : juriesDB) {
+                    Database.getInstance(getContext()).getJuryDAO().delete(jury.getJuryId());
+                    Database.getInstance(getContext()).getJuryDAO().insert(jury);
+                }
+                for (ProjectDBModel project : projectsDB) {
+                    Database.getInstance(getContext()).getProjectDAO().delete(project.getProjectId());
+                    Database.getInstance(getContext()).getProjectDAO().insert(project);
+                }
+                Log.i("DB", projectsDB.size() + " projects saved");
+            }
+        }).start();
     }
 
     /*

@@ -12,7 +12,7 @@ import icfeavoir.pfe.database.model.ProjectDBModel;
 @android.arch.persistence.room.Database(entities = {
         JuryDBModel.class,
         ProjectDBModel.class
-}, version = 1)
+}, version = 2)
 public abstract class Database extends RoomDatabase {
 
     private static final String DB_NAME = "database.db";
@@ -29,7 +29,9 @@ public abstract class Database extends RoomDatabase {
         return Room.databaseBuilder(
                 context,
                 Database.class,
-                DB_NAME).build();
+                DB_NAME)
+                .fallbackToDestructiveMigration()
+                .build();
     }
 
     public abstract JuryDAO getJuryDAO();
