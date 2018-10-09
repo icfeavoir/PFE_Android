@@ -36,7 +36,7 @@ public class LIJURProxy extends Proxy {
     }
 
     @Override
-    void sendDataToController(ArrayList<?> elements) {
+    void sendDataToController(Object elements) {
 
     }
 }
