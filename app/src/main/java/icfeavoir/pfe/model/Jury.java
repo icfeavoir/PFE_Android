@@ -12,13 +12,13 @@ import java.util.Map;
 public class Jury {
 
     private int juryId;
-    private Date date;
+    private String date;
     private Map<Integer, Project> projects;
 
     public Jury(JSONObject juryObject) {
         try {
             int juryId = juryObject.getInt("idJury");
-            Date date = new SimpleDateFormat("dd/MM/yyyy").parse(juryObject.getString("date"));
+            String date = juryObject.getString("date");
             this.juryId = juryId;
             this.date = date;
 
@@ -32,12 +32,12 @@ public class Jury {
                 // ajout du projet à la liste
                 this.addProject(project);
             }
-        } catch (JSONException | ParseException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public Jury(int juryId, Date date) {
+    public Jury(int juryId, String date) {
         this.juryId = juryId;
         this.date = date;
     }
@@ -58,11 +58,11 @@ public class Jury {
         this.juryId = juryId;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 }
