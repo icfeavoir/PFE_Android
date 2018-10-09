@@ -4,9 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Jury {
@@ -16,14 +14,15 @@ public class Jury {
     private Map<Integer, Project> projects;
 
     public Jury(JSONObject juryObject) {
+        this.projects = new HashMap<>();
         try {
-            int juryId = juryObject.getInt("idJury");
-            String date = juryObject.getString("date");
+            int juryId = juryObject.has("idJury") ? juryObject.getInt("idJury") : 0;
+            String date = juryObject.has("date") ? juryObject.getString("date") : "";
             this.juryId = juryId;
             this.date = date;
 
-            JSONObject info = juryObject.getJSONObject("info");
-            JSONArray projects = info.getJSONArray("projects");
+            JSONObject info = juryObject.has("info") ? juryObject.getJSONObject("info") : new JSONObject();
+            JSONArray projects = info.has("projects") ? info.getJSONArray("projects") : new JSONArray();
             Project project;
             for (int i = 0; i < projects.length(); i++) {
                 JSONObject projectObject = projects.getJSONObject(i);
@@ -40,6 +39,11 @@ public class Jury {
     public Jury(int juryId, String date) {
         this.juryId = juryId;
         this.date = date;
+        this.projects = new HashMap<>();
+    }
+
+    public Map<Integer, Project> getProjects() {
+        return this.projects;
     }
 
     public void addProject(Project project) {

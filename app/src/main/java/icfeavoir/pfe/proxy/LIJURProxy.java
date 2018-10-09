@@ -32,7 +32,6 @@ public class LIJURProxy extends Proxy {
 
     @Override
     public void returnDataAfterInternet(JSONObject json) {
-        Log.i("LIJUR", json.toString());
     }
 
     @Override

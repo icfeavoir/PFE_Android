@@ -131,14 +131,11 @@ public abstract class Communication extends AsyncTask<String, Void, String> {
             Log.e("QUERY", "Error with url: " + urlQuery + " | Exception: " + e.getClass());
         }
 
-        Log.i("Q", "request: " + urlQuery);
-
         return res;
     }
 
     @Override
     protected void onPostExecute(String result){
-        Log.i("Q", "res: " + result);
         try {
             JSONObject json = new JSONObject(result);
             this.proxy.checkDataAfterInternet(json);

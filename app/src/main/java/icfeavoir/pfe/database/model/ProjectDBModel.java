@@ -12,15 +12,17 @@ public class ProjectDBModel {
     private final int confid;
     private final boolean poster;
     private final String supervisor;
+    private final int juryId;
 
 
-    public ProjectDBModel(int projectId, String title, String description, int confid, boolean poster, String supervisor) {
+    public ProjectDBModel(int projectId, String title, String description, int confid, boolean poster, String supervisor, int juryId) {
         this.projectId = projectId;
         this.title = title;
         this.description = description;
         this.confid = confid;
         this.poster = poster;
         this.supervisor = supervisor;
+        this.juryId = juryId;
     }
 
     public int getProjectId() {
@@ -39,11 +41,15 @@ public class ProjectDBModel {
         return confid;
     }
 
-    public boolean isPoster() {
+    public boolean hasPoster() {
         return poster;
     }
 
     public String getSupervisor() {
         return supervisor;
+    }
+
+    public int getJuryId() {
+        return this.juryId;
     }
 }
