@@ -54,8 +54,6 @@ public class LOGONProxy extends Proxy {
 
     @Override
     void sendDataToController(ArrayList<?> elements) {
-        ArrayList<Boolean> al = new ArrayList<>();
-        al.add(true);
-        this.getActivity().displayData(al);
+        this.getActivity().displayData(true);
     }
 }

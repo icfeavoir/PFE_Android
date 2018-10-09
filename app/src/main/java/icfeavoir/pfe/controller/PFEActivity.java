@@ -6,5 +6,5 @@ import java.util.ArrayList;
 
 public abstract class PFEActivity extends AppCompatActivity {
 
-    public abstract void displayData(ArrayList<?> data);
+    public abstract void displayData(Object data);
 }
