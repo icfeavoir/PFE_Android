@@ -96,7 +96,7 @@ public class MYJURProxy extends Proxy {
     }
 
     @Override
-    void sendDataToController(ArrayList<?> elements) {
+    void sendDataToController(Object elements) {
         try {
             ArrayList<Jury> juries = (ArrayList<Jury>) elements;
             this.getActivity().displayData(juries);

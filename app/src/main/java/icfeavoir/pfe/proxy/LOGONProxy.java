@@ -17,6 +17,12 @@ public class LOGONProxy extends Proxy {
     }
 
     @Override
+    public void checkDataAfterInternet(JSONObject json) {
+        // override because we handle the KO exception (pbm with pass)
+        this.returnDataAfterInternet(json);
+    }
+
+    @Override
     void getDataFromInternet(JSONObject json) {
         // save data
         User user = User.getInstance();
@@ -43,17 +49,23 @@ public class LOGONProxy extends Proxy {
 
     @Override
     public void returnDataAfterInternet(JSONObject json) {
-        User user = User.getInstance();
         try {
-            user.setToken(json.getString("token"));
-            Log.i("TOKEN", user.getToken());
+            String result = json.getString("result");
+            if (result.equals("OK")) {
+                User user = User.getInstance();
+                user.setToken(json.getString("token"));
+                sendDataToController(true);
+            } else {
+                sendDataToController(false);
+            }
+
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e("PROXY", "No result found");
         }
     }
 
     @Override
-    void sendDataToController(ArrayList<?> elements) {
-        this.getActivity().displayData(true);
+    void sendDataToController(Object elements) {
+        this.getActivity().displayData((boolean) elements);
     }
 }

@@ -63,5 +63,5 @@ public abstract class Proxy {
 
     public abstract void returnDataAfterInternet(JSONObject json);
 
-    abstract void sendDataToController(ArrayList<?> elements);
+    abstract void sendDataToController(Object elements);
 }
