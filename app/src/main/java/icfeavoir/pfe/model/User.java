@@ -5,6 +5,7 @@ public class User {
     private static User instance;
 
     private String username;
+    private String password;
     private String token;
 
     private User() {}
@@ -31,4 +32,8 @@ public class User {
     public void setToken(String token) {
         this.token = token;
     }
+
+    public String getPassword() { return password; }
+
+    public void setPassword(String password) { this.password = password; }
 }

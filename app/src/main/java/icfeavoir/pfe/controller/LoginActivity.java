@@ -38,6 +38,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import icfeavoir.pfe.R;
+import icfeavoir.pfe.database.Database;
+import icfeavoir.pfe.database.model.UserDBModel;
 import icfeavoir.pfe.proxy.LOGONProxy;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -76,6 +78,18 @@ public class LoginActivity extends PFEActivity implements LoaderCallbacks<Cursor
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                UserDBModel user = Database.getInstance(getApplicationContext()).getUserDAO().getUser();
+                if (user != null){
+                    Log.i("Test", "user is not null " + user.getUsername() + " " + user.getPassword());
+                    connect(user.getUsername(), user.getPassword());
+                }
+            }
+        }).start();
+
+
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -88,6 +102,7 @@ public class LoginActivity extends PFEActivity implements LoaderCallbacks<Cursor
             }
         });
 
+
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -99,16 +114,6 @@ public class LoginActivity extends PFEActivity implements LoaderCallbacks<Cursor
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
-        /* TO REMOVE */
-        LOGONProxy proxy = new LOGONProxy(this);
-        JSONObject json = new JSONObject();
-        try {
-            json.put("user", "clavrmic");
-            json.put("pass", "4hH9sUFOi2gx");
-            proxy.call(json);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     private void populateAutoComplete() {
@@ -161,7 +166,10 @@ public class LoginActivity extends PFEActivity implements LoaderCallbacks<Cursor
     private void attemptLogin() {
         String user = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+        connect(user, password);
+    }
 
+    private void connect(String user, String password) {
         LOGONProxy proxy = new LOGONProxy(this);
         JSONObject json = new JSONObject();
         try {
@@ -171,7 +179,10 @@ public class LoginActivity extends PFEActivity implements LoaderCallbacks<Cursor
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
 
+    private void deconnect() {
+        Database.getInstance(this.getApplicationContext()).getUserDAO().delete();
     }
 
     private boolean isEmailValid(String email) {

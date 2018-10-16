@@ -10,6 +10,8 @@ import java.util.List;
 
 import icfeavoir.pfe.communication.LOGONCommunication;
 import icfeavoir.pfe.controller.PFEActivity;
+import icfeavoir.pfe.database.Database;
+import icfeavoir.pfe.database.model.UserDBModel;
 import icfeavoir.pfe.model.User;
 
 public class LOGONProxy extends Proxy {
@@ -29,6 +31,7 @@ public class LOGONProxy extends Proxy {
         User user = User.getInstance();
         try {
             user.setUsername(json.getString("user"));
+            user.setPassword(json.getString("pass"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -54,9 +57,17 @@ public class LOGONProxy extends Proxy {
         try {
             String result = json.getString("result");
             if (result.equals("OK")) {
-                User user = User.getInstance();
+                final User user = User.getInstance();
                 user.setToken(json.getString("token"));
                 sendDataToController(true);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Database.getInstance(getContext()).getUserDAO().delete();
+                        UserDBModel userDB = new UserDBModel(user.getUsername(), user.getPassword());
+                        Database.getInstance(getContext()).getUserDAO().insert(userDB);
+                    }
+                }).start();
             } else {
                 sendDataToController(false);
             }

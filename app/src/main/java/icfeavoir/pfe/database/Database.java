@@ -6,16 +6,19 @@ import android.content.Context;
 import icfeavoir.pfe.database.dao.JuryDAO;
 import icfeavoir.pfe.database.dao.NoteDAO;
 import icfeavoir.pfe.database.dao.ProjectDAO;
+import icfeavoir.pfe.database.dao.UserDAO;
 import icfeavoir.pfe.database.model.JuryDBModel;
 import icfeavoir.pfe.database.model.NoteDBModel;
 import icfeavoir.pfe.database.model.ProjectDBModel;
+import icfeavoir.pfe.database.model.UserDBModel;
 
 // increment the version at each database update !
 @android.arch.persistence.room.Database(entities = {
         JuryDBModel.class,
+        NoteDBModel.class,
         ProjectDBModel.class,
-        NoteDBModel.class
-}, version = 3)
+        UserDBModel.class
+}, version = 4)
 public abstract class Database extends RoomDatabase {
 
     private static final String DB_NAME = "database.db";
@@ -39,5 +42,6 @@ public abstract class Database extends RoomDatabase {
 
     public abstract JuryDAO getJuryDAO();
     public abstract ProjectDAO getProjectDAO();
+    public abstract UserDAO getUserDAO();
     public abstract NoteDAO getNoteDAO();
 }
