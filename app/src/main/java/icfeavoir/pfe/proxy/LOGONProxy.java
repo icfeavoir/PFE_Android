@@ -4,13 +4,12 @@ import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.List;
-
+import icfeavoir.pfe.communication.Communication;
 import icfeavoir.pfe.communication.LOGONCommunication;
 import icfeavoir.pfe.controller.PFEActivity;
 import icfeavoir.pfe.database.Database;
+import icfeavoir.pfe.database.model.OfflineDBModel;
 import icfeavoir.pfe.database.model.UserDBModel;
 import icfeavoir.pfe.model.User;
 
@@ -87,6 +86,8 @@ public class LOGONProxy extends Proxy {
                         Database.getInstance(getContext()).getUserDAO().insert(userDB);
                     }
                 }).start();
+
+                this.saveOfflineData();
             } else {
                 sendDataToController(false);
             }
@@ -99,5 +100,26 @@ public class LOGONProxy extends Proxy {
     @Override
     void sendDataToController(Object elements) {
         this.getActivity().displayData(elements);
+    }
+
+    private void saveOfflineData() {
+        // saving and deleting all data from Offline
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<OfflineDBModel> queries = Database.getInstance(getContext()).getOfflineDAO().getAllQueries();
+                for (OfflineDBModel query : queries) {
+                    Proxy proxy = Proxy.proxyBuilder(Communication.API_ENDPOINTS.valueOf(query.getEndpoint()), getActivity());
+                    try {
+                        JSONObject json = new JSONObject(query.getQuery());
+                        proxy.call(json);
+                        // delete it
+                        Database.getInstance(getContext()).getOfflineDAO().delete(query);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
 }

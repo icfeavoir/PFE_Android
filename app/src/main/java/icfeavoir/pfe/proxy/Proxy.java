@@ -9,6 +9,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import icfeavoir.pfe.communication.Communication;
+import icfeavoir.pfe.communication.LIJURCommunication;
+import icfeavoir.pfe.communication.LOGONCommunication;
+import icfeavoir.pfe.communication.MYJURCommunication;
+import icfeavoir.pfe.communication.NEWNTCommunication;
+import icfeavoir.pfe.communication.NOTESCommunication;
 import icfeavoir.pfe.controller.PFEActivity;
 import icfeavoir.pfe.model.User;
 import icfeavoir.pfe.utils.Utils;
@@ -76,4 +82,41 @@ public abstract class Proxy {
     public abstract void returnDataAfterInternet(JSONObject json);
 
     abstract void sendDataToController(Object elements);
+
+    public static Proxy proxyBuilder(Communication.API_ENDPOINTS endpoint, PFEActivity activity) {
+        Proxy proxy = null;
+        switch (endpoint) {
+            case LOGON:
+                proxy = new LOGONProxy(activity);
+                break;
+            case LIPRJ:
+//                proxy = new LIPRJProxy(activity);
+                break;
+            case MYPRJ:
+//                proxy = new MYPRJProxy(activity);
+                break;
+            case LIJUR:
+                proxy = new LIJURProxy(activity);
+                break;
+            case MYJUR:
+                proxy = new MYJURProxy(activity);
+                break;
+            case JYINF:
+//                proxy = new JYINFProxy(activity);
+                break;
+            case POSTR:
+//                proxy = new POSTRProxy(activity);
+                break;
+            case NOTES:
+                proxy = new NOTESProxy(activity);
+                break;
+            case NEWNT:
+                proxy = new NEWNTProxy(activity);
+                break;
+            case PORTE:
+//                proxy = new PORTEProxy(activity);
+                break;
+        }
+        return proxy;
+    }
 }

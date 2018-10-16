@@ -3,6 +3,7 @@ package icfeavoir.pfe.database.dao;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import java.util.List;
 
@@ -20,6 +21,9 @@ public interface NoteDAO {
     List<NoteDBModel> getNotesByProjectId(int projectId);
     @Query("SELECT * FROM NoteDBModel")
     List<NoteDBModel> getAll();
+
+    @Query("UPDATE NoteDBModel SET note=:newNote WHERE projectId=:projectId AND userId=:userId")
+    void updateNote(int newNote, int projectId, int userId);
 
     @Query("DELETE FROM NoteDBModel WHERE projectId=:projectId")
     void deleteByProjectId(int projectId);

@@ -23,6 +23,7 @@ public abstract class Communication extends AsyncTask<String, Void, String> {
     private String query;
     private Context context;
     private Proxy proxy;
+    private boolean shouldReturn;
 
     Communication(Context context, Proxy proxy, API_ENDPOINTS endpoint) {
         this.context = context;
@@ -30,7 +31,7 @@ public abstract class Communication extends AsyncTask<String, Void, String> {
         this.setQuery(endpoint.toString());
     }
 
-    enum API_ENDPOINTS {
+    public enum API_ENDPOINTS {
         LOGON,
         LIPRJ,
         MYPRJ,
@@ -79,8 +80,16 @@ public abstract class Communication extends AsyncTask<String, Void, String> {
         }
     }
 
+    public void call() {
+        this.call(new JSONObject());
+    }
 
     public void call(JSONObject json) {
+        this.call(json, true);
+    }
+
+    public void call(JSONObject json, boolean shouldReturn) {
+        this.shouldReturn = shouldReturn;
         if (this.getQuery() != null) {
             request(this.getQuery(), json, this.getProxy());
         } else {
@@ -95,48 +104,6 @@ public abstract class Communication extends AsyncTask<String, Void, String> {
         String urlQuery = params[0];
         StringBuilder sb = new StringBuilder();
         String res = "";
-//        try {
-//            TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
-//                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-//                    return null;
-//                }
-//
-//                public void checkClientTrusted(X509Certificate[] certs, String authType) {
-//                }
-//
-//                public void checkServerTrusted(X509Certificate[] certs, String authType) {
-//                }
-//            }};
-//
-//            // Install the all-trusting trust manager
-//            SSLContext sc = SSLContext.getInstance("SSL");
-//            sc.init(null, trustAllCerts, new java.security.SecureRandom());
-//            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-//
-//            // Create all-trusting host name verifier
-//            HostnameVerifier allHostsValid = new HostnameVerifier() {
-//                public boolean verify(String hostname, SSLSession session) {
-//                    return true;
-//                }
-//            };
-//
-//            // Install the all-trusting host verifier
-//            HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
-//
-//            URL url = new URL(urlQuery);
-//            URLConnection con = url.openConnection();
-//            Reader reader = new InputStreamReader(con.getInputStream());
-//            while (true) {
-//                int ch = reader.read();
-//                if (ch == -1) {
-//                    break;
-//                }
-//                sb.append((char) ch);
-//            }
-//            res = sb.toString();
-//        } catch (Exception e) {
-//            Log.e("QUERY", "Error with url: " + urlQuery + " | Exception: " + e.getClass());
-//        }
 
         // NEW WE CA
         TrustManager trustManager = new TrustManager();
@@ -166,12 +133,14 @@ public abstract class Communication extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String result){
-        try {
-            JSONObject json = new JSONObject(result);
-            this.proxy.checkDataAfterInternet(json);
-        } catch (JSONException e) {
-            Log.i("NON JSON RES", result);
-            Log.e("POST ASYNC", "Response is not a JSON");
+        if (this.shouldReturn) {
+            try {
+                JSONObject json = new JSONObject(result);
+                this.proxy.checkDataAfterInternet(json);
+            } catch (JSONException e) {
+                Log.i("NON JSON RES", result);
+                Log.e("POST ASYNC", "Response is not a JSON");
+            }
         }
     }
 }

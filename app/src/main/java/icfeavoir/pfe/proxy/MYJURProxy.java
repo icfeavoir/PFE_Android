@@ -133,7 +133,7 @@ public class MYJURProxy extends Proxy {
     @Override
     void sendDataToController(Object elements) {
         try {
-            ArrayList<Jury> juries = (ArrayList<Jury>) elements;
+            List<Jury> juries = (List<Jury>) elements;
             this.getActivity().displayData(juries);
         } catch (Exception e) {
             e.printStackTrace();

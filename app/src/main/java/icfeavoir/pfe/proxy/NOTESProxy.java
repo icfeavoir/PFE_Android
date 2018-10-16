@@ -66,8 +66,6 @@ public class NOTESProxy extends Proxy {
                         );
                         notes.add(note);
                     }
-                    Log.i("NOTE", notes.size() +" notes in DB");
-
                     // display data
                     sendDataToController(notes);
                 } catch (Exception e){
@@ -79,7 +77,6 @@ public class NOTESProxy extends Proxy {
 
     @Override
     public void returnDataAfterInternet(JSONObject json) {
-        Log.i("NOTES", json.toString());
         List<Note> notes = new ArrayList<>();
         Gson gson = new Gson();
         try {
@@ -120,20 +117,15 @@ public class NOTESProxy extends Proxy {
                 // delete all notes of this project
                 Database.getInstance(getContext()).getNoteDAO().deleteByProjectId(projectId);
                 Database.getInstance(getContext()).getNoteDAO().insert(noteDBModels);
-                Log.i("NOTES", "added " + noteDBModels.size() + " notes");
             }
         }).start();
     }
 
     @Override
     void sendDataToController(Object elements) {
-        try {
-            List<Note> notes = (List<Note>) elements;
-            for (Note note : notes) {
-                Log.i("NOTE", note.toString());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        List<Note> notes = (List<Note>) elements;
+        for (Note note : notes) {
+            Log.i("NOTE", note.toString());
         }
     }
 }

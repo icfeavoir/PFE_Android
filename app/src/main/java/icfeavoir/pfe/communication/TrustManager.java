@@ -50,7 +50,6 @@ public class TrustManager {
             } catch (CertificateException e) {
                 e.printStackTrace();
             }
-            System.out.println("ca=" + ((X509Certificate) ca).getSubjectDN());
         } finally {
             try {
                 caInput.close();
