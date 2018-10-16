@@ -18,9 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".controller.HomeActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name=".controller.LoginActivity"
+            android:label="@string/title_activity_login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,8 +27,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".controller.LoginActivity"
-            android:label="@string/title_activity_login" />
+            android:name=".controller.MYJURActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".controller.JYINFActivity"
+            android:label="@string/title_activity_jyinf"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

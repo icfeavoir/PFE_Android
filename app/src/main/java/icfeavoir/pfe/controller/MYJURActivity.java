@@ -1,5 +1,6 @@
 package icfeavoir.pfe.controller;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,22 +12,22 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import icfeavoir.pfe.R;
-import icfeavoir.pfe.proxy.LOGONProxy;
+import icfeavoir.pfe.model.Jury;
 import icfeavoir.pfe.proxy.MYJURProxy;
-import icfeavoir.pfe.adapters.HomeAdapter;
 
-public class HomeActivity extends PFEActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MYJURActivity extends PFEActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    public static final String JURY_EXTRA = "jury_extra";
 
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -35,7 +36,7 @@ public class HomeActivity extends PFEActivity implements NavigationView.OnNaviga
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        mRecyclerView = (RecyclerView) findViewById(R.id.myjurList);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -63,6 +64,9 @@ public class HomeActivity extends PFEActivity implements NavigationView.OnNaviga
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        attemptMYJUR();
+
     }
 
     @Override
@@ -123,9 +127,19 @@ public class HomeActivity extends PFEActivity implements NavigationView.OnNaviga
     }
 
     @Override
-    public void displayData(ArrayList<?> data) {
-        for (Object o : data) {
-            Log.i("PFE DATA", o.toString());
-        }
+    public void displayData(Object data) {
+        ArrayList<Jury> juries = (ArrayList<Jury>) data;
+    }
+
+    public void clickJuryCard(Jury jury) {
+        Intent intent = new Intent(this, JYINFActivity.class);
+        intent.putExtra(JURY_EXTRA, jury.getJuryId());
+        startActivity(intent);
+    }
+
+    private void attemptMYJUR() {
+        MYJURProxy proxy = new MYJURProxy(this);
+        JSONObject json = new JSONObject();
+        proxy.getData(json);
     }
 }

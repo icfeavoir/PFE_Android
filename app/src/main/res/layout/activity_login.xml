@@ -22,6 +22,7 @@
 
     <ScrollView
         android:id="@+id/login_form"
+        android:text="clavrmic"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -52,6 +53,7 @@
 
                 <EditText
                     android:id="@+id/password"
+                    android:text="4hH9sUFOi2gx"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
@@ -63,6 +65,18 @@
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
+            <TextView
+                android:id="@+id/error_message"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="2dp"
+                android:text="Login ou mot de passe incorect"
+                android:textColor="@color/white"
+                android:background="@color/orange"
+                android:gravity="center"
+                android:visibility="invisible"
+                android:textSize="20sp"/>
 
             <Button
                 android:id="@+id/email_sign_in_button"
