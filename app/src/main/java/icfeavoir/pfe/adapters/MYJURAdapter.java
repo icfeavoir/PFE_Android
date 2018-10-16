@@ -2,6 +2,7 @@ package icfeavoir.pfe.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,8 +43,8 @@ public class MYJURAdapter extends RecyclerView.Adapter<MYJURAdapter.MYJURViewHol
     @Override
     public void onBindViewHolder(@NonNull MYJURViewHolder holder, int position) {
         final Jury jury = juries.get(position);
-        holder.jury_jury_id.setText(jury.getJuryId());
-        holder.jury_date.setText(jury.getDate().toString());
+        holder.jury_jury_id.setText("Jury n°" + String.valueOf(jury.getJuryId()));
+        holder.jury_date.setText(jury.getDate());
 
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override

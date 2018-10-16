@@ -22,7 +22,6 @@
 
     <ScrollView
         android:id="@+id/login_form"
-        android:text="clavrmic"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -53,7 +52,6 @@
 
                 <EditText
                     android:id="@+id/password"
-                    android:text="4hH9sUFOi2gx"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"

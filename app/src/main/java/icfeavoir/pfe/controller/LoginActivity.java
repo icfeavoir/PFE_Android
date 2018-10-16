@@ -83,7 +83,6 @@ public class LoginActivity extends PFEActivity implements LoaderCallbacks<Cursor
             public void run() {
                 UserDBModel user = Database.getInstance(getApplicationContext()).getUserDAO().getUser();
                 if (user != null){
-                    Log.i("Test", "user is not null " + user.getUsername() + " " + user.getPassword());
                     connect(user.getUsername(), user.getPassword());
                 }
             }

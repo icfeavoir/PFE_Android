@@ -4,32 +4,31 @@
     android:layout_height="wrap_content"
     xmlns:card_view="http://schemas.android.com/tools"
     android:layout_margin="8dp"
-    android:elevation="6dp"
-    card_view:cardBackgroundColor="@color/darkBlue">
+    android:elevation="6dp">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:background="@color/lightBlue">
         >
         <TextView
             android:id="@+id/jury_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="2dp"
-            android:maxLines="2"
-            android:minLines="2"
-            android:text="JURY 1"
+            android:maxLines="1"
+            android:minLines="1"
             android:textColor="@color/white"
-            android:textSize="24sp" />
+            android:textSize="40sp" />
         <TextView
             android:id="@+id/date"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="1"
             android:padding="2dp"
-            android:text="Lundi 22 octobre"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:gravity="end"/>
 
     </LinearLayout>
 

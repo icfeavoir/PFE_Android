@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import icfeavoir.pfe.R;
+import icfeavoir.pfe.adapters.MYJURAdapter;
 import icfeavoir.pfe.model.Jury;
 import icfeavoir.pfe.model.Project;
 import icfeavoir.pfe.proxy.MYJURProxy;
@@ -36,6 +37,8 @@ public class MYJURActivity extends PFEActivity implements NavigationView.OnNavig
 
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
+
+    private MYJURAdapter myjurAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,8 @@ public class MYJURActivity extends PFEActivity implements NavigationView.OnNavig
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+        this.myjurAdapter = new MYJURAdapter(this);
+        mRecyclerView.setAdapter(this.myjurAdapter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -70,29 +75,7 @@ public class MYJURActivity extends PFEActivity implements NavigationView.OnNavig
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-//        attemptMYJUR();
-
-        // get notes
-        NOTESProxy proxy = new NOTESProxy(this);
-        JSONObject json = new JSONObject();
-        try {
-            json.put("proj", 8);
-            proxy.call(json);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        // set note
-//        NEWNTProxy proxy2 = new NEWNTProxy(this);
-//        JSONObject json2 = new JSONObject();
-//        try {
-//            json2.put("proj", 8);
-//            json2.put("student", 47);
-//            json2.put("note", 15);
-//            proxy2.call(json2);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
+        attemptMYJUR();
 
     }
 
@@ -156,11 +139,7 @@ public class MYJURActivity extends PFEActivity implements NavigationView.OnNavig
     @Override
     public void displayData(Object data) {
         ArrayList<Jury> juries = (ArrayList<Jury>) data;
-        for (Jury j : juries) {
-            for (Map.Entry<Integer, Project> entry : j.getProjects().entrySet()) {
-                Log.i("P", "PID : " + entry.getValue().getProjectId());
-            }
-        }
+        this.myjurAdapter.setJuries(juries);
     }
 
     public void clickJuryCard(Jury jury) {
