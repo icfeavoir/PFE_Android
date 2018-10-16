@@ -41,10 +41,29 @@ public class LOGONProxy extends Proxy {
     }
 
     @Override
-    void callWithoutInternet(JSONObject json) {
-        // do nothing, no login without connection
-        Log.e("CONNECTION", "Not connected, cannot connect");
-        sendDataToController(true);
+    void callWithoutInternet(final JSONObject json) {
+        // If no connection, we connect with the last login
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String username, password;
+                try {
+                    username = json.has("user") ? json.getString("user") : "";
+                    password = json.has("pass") ? json.getString("pass") : "";
+                    UserDBModel userDB = Database.getInstance(getContext()).getUserDAO().getUser(username, password);
+                    if (userDB != null) {
+                        User userInstance = User.getInstance();
+                        userInstance.setUsername(username);
+                        userInstance.setPassword(password);
+                        sendDataToController(true);
+                    } else {
+                        sendDataToController(false);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     @Override
