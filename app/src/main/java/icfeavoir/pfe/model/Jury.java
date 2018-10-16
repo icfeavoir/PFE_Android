@@ -1,5 +1,7 @@
 package icfeavoir.pfe.model;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,7 +29,6 @@ public class Jury {
             for (int i = 0; i < projects.length(); i++) {
                 JSONObject projectObject = projects.getJSONObject(i);
                 project = new Project(projectObject);
-
                 // ajout du projet à la liste
                 this.addProject(project);
             }

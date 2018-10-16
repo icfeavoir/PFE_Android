@@ -1,7 +1,5 @@
 package icfeavoir.pfe.proxy;
 
-import android.util.Log;
-
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -15,13 +13,13 @@ public class LIJURProxy extends Proxy {
     }
 
     @Override
-    void getDataFromInternet(JSONObject json) {
+    void callWithInternet(JSONObject json) {
         LIJURCommunication com = new LIJURCommunication(this.getContext(), this);
-        com.getData(json);
+        com.call(json);
     }
 
     @Override
-    void getDataWithoutInternet(JSONObject json) {
+    void callWithoutInternet(JSONObject json) {
 
     }
 

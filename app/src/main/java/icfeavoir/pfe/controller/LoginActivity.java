@@ -156,7 +156,7 @@ public class LoginActivity extends PFEActivity implements LoaderCallbacks<Cursor
         try {
             json.put("user", user);
             json.put("pass", password);
-            proxy.getData(json);
+            proxy.call(json);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -140,6 +140,6 @@ public class MYJURActivity extends PFEActivity implements NavigationView.OnNavig
     private void attemptMYJUR() {
         MYJURProxy proxy = new MYJURProxy(this);
         JSONObject json = new JSONObject();
-        proxy.getData(json);
+        proxy.call(json);
     }
 }

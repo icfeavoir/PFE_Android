@@ -7,6 +7,6 @@ import icfeavoir.pfe.proxy.Proxy;
 public class MYJURCommunication extends Communication {
     public MYJURCommunication(Context context, Proxy proxy) {
         super(context, proxy);
-        this.setQuery("MYJUR");
+        this.setQuery(API_ENDPOINTS.MYJUR.toString());
     }
 }

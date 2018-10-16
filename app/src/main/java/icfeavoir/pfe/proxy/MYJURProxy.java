@@ -6,9 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -27,15 +25,14 @@ public class MYJURProxy extends Proxy {
     }
 
     @Override
-    void getDataFromInternet(JSONObject json) {
+    void callWithInternet(JSONObject json) {
         // call the communication class and give "this" to enable the callback
         MYJURCommunication com = new MYJURCommunication(this.getContext(), this);
-        // empty JSON for all data
-        com.getData(json);
+        com.call(json);
     }
 
     @Override
-    void getDataWithoutInternet(JSONObject json) {
+    void callWithoutInternet(JSONObject json) {
         final ArrayList<Jury> allJuries = new ArrayList<>();
         // save data in DB with new Thread
         new Thread(new Runnable() {
@@ -103,7 +100,6 @@ public class MYJURProxy extends Proxy {
                     Database.getInstance(getContext()).getProjectDAO().delete(project.getProjectId());
                     Database.getInstance(getContext()).getProjectDAO().insert(project);
                 }
-                Log.i("DB", projectsDB.size() + " projects saved");
             }
         }).start();
     }
@@ -114,13 +110,12 @@ public class MYJURProxy extends Proxy {
     @Override
     public void returnDataAfterInternet(JSONObject json) {
         ArrayList<Jury> alJuries = new ArrayList<>();
-        Jury jury = null;
+        Jury jury;
         try {
-            JSONArray juriesArr = json.getJSONArray("juries");
+            JSONArray juriesArr = json.has("juries") ? json.getJSONArray("juries") : new JSONArray();
             for (int i = 0; i < juriesArr.length(); i++) {
                 JSONObject juryObject = juriesArr.getJSONObject(i);
                 jury = new Jury(juryObject);
-
                 // add jury to the list
                 alJuries.add(jury);
             }

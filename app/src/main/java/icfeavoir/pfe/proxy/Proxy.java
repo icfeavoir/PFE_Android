@@ -19,7 +19,7 @@ public abstract class Proxy {
         this.activity = activity;
     }
 
-    public void getData(JSONObject json) {
+    public void call(JSONObject json) {
         if (Utils.isConnected(activity.getApplicationContext())) {
             // internet connection
             // add token is exists
@@ -31,10 +31,10 @@ public abstract class Proxy {
                 } catch (JSONException e) {
                 }
             }
-            this.getDataFromInternet(json);
+            this.callWithInternet(json);
         } else {
             // no internet connection
-            this.getDataWithoutInternet(json);
+            this.callWithoutInternet(json);
         }
     }
 
@@ -46,15 +46,22 @@ public abstract class Proxy {
         return this.getActivity().getApplicationContext();
     }
 
-    abstract void getDataFromInternet(JSONObject json);
-    abstract void getDataWithoutInternet(JSONObject json);
-    abstract void saveDataFromInternet(ArrayList<?> elements);
+    abstract void callWithInternet(JSONObject json);
+    abstract void callWithoutInternet(JSONObject json);
+
+    void saveDataFromInternet(ArrayList<?> elements) {
+
+    }
 
     public void checkDataAfterInternet(JSONObject json) {
         try {
             String result = json.getString("result");
             if (result.equals("OK")) {
                 this.returnDataAfterInternet(json);
+            }
+            // to remove
+            else {
+                Log.e("BACKEND_ERR", json.toString());
             }
         } catch (JSONException e) {
             Log.e("PROXY", "No result found");

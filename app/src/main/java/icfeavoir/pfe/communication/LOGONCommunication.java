@@ -6,6 +6,6 @@ import icfeavoir.pfe.proxy.Proxy;
 public class LOGONCommunication extends Communication {
     public LOGONCommunication(Context context, Proxy proxy) {
         super(context, proxy);
-        this.setQuery("LOGON");
+        this.setQuery(API_ENDPOINTS.LOGON.toString());
     }
 }

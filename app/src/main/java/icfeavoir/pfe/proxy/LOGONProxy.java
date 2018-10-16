@@ -23,7 +23,7 @@ public class LOGONProxy extends Proxy {
     }
 
     @Override
-    void getDataFromInternet(JSONObject json) {
+    void callWithInternet(JSONObject json) {
         // save data
         User user = User.getInstance();
         try {
@@ -33,13 +33,14 @@ public class LOGONProxy extends Proxy {
         }
 
         LOGONCommunication com = new LOGONCommunication(this.getContext(), this);
-        com.getData(json);
+        com.call(json);
     }
 
     @Override
-    void getDataWithoutInternet(JSONObject json) {
+    void callWithoutInternet(JSONObject json) {
         // do nothing, no login without connection
         Log.e("CONNECTION", "Not connected, cannot connect");
+        sendDataToController(false);
     }
 
     @Override

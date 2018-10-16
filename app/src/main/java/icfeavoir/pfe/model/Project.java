@@ -1,5 +1,7 @@
 package icfeavoir.pfe.model;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,16 +13,17 @@ public class Project {
     private int confid;
     private boolean poster;
     private String supervisor;
+    private int studentId;
 
     public Project(JSONObject projectObject) {
         try {
-            int projectId = projectObject.has("projectId") ? projectObject.getInt("projectId") : 0;
-            String title = projectObject.has("title") ? projectObject.getString("title") : "";
-            String description = projectObject.has("description") ? projectObject.getString("description") : "";
-            int confid = projectObject.has("confid") ? projectObject.getInt("confid") : 0;
-            boolean poster = projectObject.has("poster") ? projectObject.getBoolean("poster") : false;
-            String supervisor = projectObject.has("supervisor") ? (projectObject.getJSONObject("supervisor").getString("forename") + " " + projectObject.getJSONObject("supervisor").getString("surname")) : "";
-            this.projectId = projectId;
+            this.projectId = projectObject.has("projectId") ? projectObject.getInt("projectId") : 0;
+            this.title = projectObject.has("title") ? projectObject.getString("title") : "";
+            this.description = projectObject.has("description") ? projectObject.getString("description") : "";
+            this.confid = projectObject.has("confid") ? projectObject.getInt("confid") : 0;
+            this.poster = projectObject.has("poster") ? projectObject.getBoolean("poster") : false;
+            this.supervisor = projectObject.has("supervisor") ? (projectObject.getJSONObject("supervisor").getString("forename") + " " + projectObject.getJSONObject("supervisor").getString("surname")) : "";
+            this.studentId = projectObject.has("students") ? (projectObject.getJSONArray("students").getJSONObject(0).getInt("userId")) : 0;
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -39,10 +42,6 @@ public class Project {
         return projectId;
     }
 
-    public void setProjectId(int projectId) {
-        this.projectId = projectId;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -55,24 +54,12 @@ public class Project {
         return confid;
     }
 
-    public void setConfid(int confid) {
-        this.confid = confid;
-    }
-
     public boolean hasPoster() {
         return poster;
     }
 
-    public void setPoster(boolean poster) {
-        this.poster = poster;
-    }
-
     public String getSupervisor() {
         return supervisor;
-    }
-
-    public void setSupervisor(String supervisor) {
-        this.supervisor = supervisor;
     }
 
     public String getDescription() {
@@ -81,5 +68,9 @@ public class Project {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getStudentId() {
+        return studentId;
     }
 }
