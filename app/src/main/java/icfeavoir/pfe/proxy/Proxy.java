@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import icfeavoir.pfe.controller.PFEActivity;
 import icfeavoir.pfe.model.User;
@@ -19,7 +20,12 @@ public abstract class Proxy {
         this.activity = activity;
     }
 
+    public void call() {
+        this.call(new JSONObject());
+    }
+
     public void call(JSONObject json) {
+        this.beforeCalling(json);
         if (Utils.isConnected(activity.getApplicationContext())) {
             // internet connection
             // add token is exists
@@ -49,9 +55,8 @@ public abstract class Proxy {
     abstract void callWithInternet(JSONObject json);
     abstract void callWithoutInternet(JSONObject json);
 
-    void saveDataFromInternet(ArrayList<?> elements) {
-
-    }
+    void saveDataFromInternet(List<?> elements) {}
+    void beforeCalling(JSONObject json) {}
 
     public void checkDataAfterInternet(JSONObject json) {
         try {

@@ -24,49 +24,38 @@ public abstract class Communication extends AsyncTask<String, Void, String> {
     private Context context;
     private Proxy proxy;
 
-    Communication(Context context, Proxy proxy) {
+    Communication(Context context, Proxy proxy, API_ENDPOINTS endpoint) {
         this.context = context;
         this.proxy = proxy;
+        this.setQuery(endpoint.toString());
     }
 
     enum API_ENDPOINTS {
-        LOGON("LOGON"),
-        LIPRJ("LIPRJ"),
-        MYPRJ("MYPRJ"),
-        LIJUR("LIJUR"),
-        MYJUR("MYJUR"),
-        JYINF("JYINF"),
-        POSTR("POSTR"),
-        NOTES("NOTES"),
-        NEWNT("NEWNT"),
-        PORTE("PORTE");
-
-        private String name;
-
-        //Constructeur
-        API_ENDPOINTS(String name){
-            this.name = name;
-        }
-
-        @Override
-        public String toString(){
-            return name;
-        }
-    };
+        LOGON,
+        LIPRJ,
+        MYPRJ,
+        LIJUR,
+        MYJUR,
+        JYINF,
+        POSTR,
+        NOTES,
+        NEWNT,
+        PORTE,
+    }
 
     Proxy getProxy() {
         return proxy;
     }
 
-    public String getQuery() {
+    private String getQuery() {
         return query;
     }
 
-    public void setQuery(String query) {
+    private void setQuery(String query) {
         this.query = query;
     }
 
-    void request(String endpoint, JSONObject data, final Proxy callbackProxy) {
+    private void request(String endpoint, JSONObject data, final Proxy callbackProxy) {
         StringBuilder url = new StringBuilder(URL);
         url.append("q=").append(endpoint);
 

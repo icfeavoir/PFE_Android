@@ -98,6 +98,17 @@ public class LoginActivity extends PFEActivity implements LoaderCallbacks<Cursor
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        /* TO REMOVE */
+        LOGONProxy proxy = new LOGONProxy(this);
+        JSONObject json = new JSONObject();
+        try {
+            json.put("user", "clavrmic");
+            json.put("pass", "4hH9sUFOi2gx");
+            proxy.call(json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void populateAutoComplete() {

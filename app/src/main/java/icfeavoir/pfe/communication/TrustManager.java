@@ -27,9 +27,7 @@ public class TrustManager {
     }
 
     public void setSLLContext(SSLContext sslcontext) {
-        System.out.println("********************DANS SSL CONTEXT*************************$");
         this.sslcontext = sslcontext;
-        System.out.println("*************This.sslcontext: "+this.sslcontext+" **************************$");
 
     }
 
@@ -102,10 +100,8 @@ public class TrustManager {
 
         {
             try {
-                System.out.println("********************DANS BAS METHODE*************************$");
                 SSLContext sslContext = SSLContext.getInstance("TLS");
                 sslContext.init(null, tmf.getTrustManagers(), null);
-                System.out.println("*******************SSL CONTEXT " + sslContext + "**************************");
                 this.setSLLContext(sslContext);
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();

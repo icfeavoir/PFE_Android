@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import icfeavoir.pfe.communication.LOGONCommunication;
 import icfeavoir.pfe.controller.PFEActivity;
@@ -40,11 +41,11 @@ public class LOGONProxy extends Proxy {
     void callWithoutInternet(JSONObject json) {
         // do nothing, no login without connection
         Log.e("CONNECTION", "Not connected, cannot connect");
-        sendDataToController(false);
+        sendDataToController(true);
     }
 
     @Override
-    void saveDataFromInternet(ArrayList<?> elements) {
+    void saveDataFromInternet(List<?> elements) {
         // do nothing, not saving account in DB
     }
 

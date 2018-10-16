@@ -6,7 +6,6 @@ import icfeavoir.pfe.proxy.Proxy;
 
 public class NEWNTCommunication extends Communication {
     public NEWNTCommunication(Context context, Proxy proxy) {
-        super(context, proxy);
-        this.setQuery(API_ENDPOINTS.NEWNT.toString());
+        super(context, proxy, API_ENDPOINTS.NEWNT);
     }
 }

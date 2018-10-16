@@ -17,13 +17,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import icfeavoir.pfe.R;
 import icfeavoir.pfe.model.Jury;
+import icfeavoir.pfe.model.Project;
 import icfeavoir.pfe.proxy.MYJURProxy;
+import icfeavoir.pfe.proxy.NEWNTProxy;
+import icfeavoir.pfe.proxy.NOTESProxy;
 
 public class MYJURActivity extends PFEActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -65,7 +70,29 @@ public class MYJURActivity extends PFEActivity implements NavigationView.OnNavig
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        attemptMYJUR();
+//        attemptMYJUR();
+
+        // get notes
+        NOTESProxy proxy = new NOTESProxy(this);
+        JSONObject json = new JSONObject();
+        try {
+            json.put("proj", 8);
+            proxy.call(json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // set note
+//        NEWNTProxy proxy2 = new NEWNTProxy(this);
+//        JSONObject json2 = new JSONObject();
+//        try {
+//            json2.put("proj", 8);
+//            json2.put("student", 47);
+//            json2.put("note", 15);
+//            proxy2.call(json2);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
 
     }
 
@@ -129,6 +156,11 @@ public class MYJURActivity extends PFEActivity implements NavigationView.OnNavig
     @Override
     public void displayData(Object data) {
         ArrayList<Jury> juries = (ArrayList<Jury>) data;
+        for (Jury j : juries) {
+            for (Map.Entry<Integer, Project> entry : j.getProjects().entrySet()) {
+                Log.i("P", "PID : " + entry.getValue().getProjectId());
+            }
+        }
     }
 
     public void clickJuryCard(Jury jury) {

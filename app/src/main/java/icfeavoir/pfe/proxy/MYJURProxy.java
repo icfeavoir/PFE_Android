@@ -34,7 +34,7 @@ public class MYJURProxy extends Proxy {
     @Override
     void callWithoutInternet(JSONObject json) {
         final ArrayList<Jury> allJuries = new ArrayList<>();
-        // save data in DB with new Thread
+        // get data from DB with new Thread
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -66,7 +66,7 @@ public class MYJURProxy extends Proxy {
     }
 
     @Override
-    public void saveDataFromInternet(ArrayList<?> elements) {
+    public void saveDataFromInternet(List<?> elements) {
         Jury jury;
         final List<JuryDBModel> juriesDB = new ArrayList<>();
         final List<ProjectDBModel> projectsDB = new ArrayList<>();

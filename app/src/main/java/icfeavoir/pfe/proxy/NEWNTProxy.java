@@ -25,7 +25,7 @@ public class NEWNTProxy extends Proxy {
 
     @Override
     void callWithoutInternet(JSONObject json) {
-        // save in DB to send later OR disable ?
+        // save in DB to send later
     }
 
     @Override

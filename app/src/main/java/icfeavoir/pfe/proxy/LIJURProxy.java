@@ -3,6 +3,7 @@ package icfeavoir.pfe.proxy;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import icfeavoir.pfe.communication.LIJURCommunication;
 import icfeavoir.pfe.controller.PFEActivity;
@@ -24,7 +25,7 @@ public class LIJURProxy extends Proxy {
     }
 
     @Override
-    void saveDataFromInternet(ArrayList<?> elements) {
+    void saveDataFromInternet(List<?> elements) {
 
     }
 
