@@ -2,14 +2,11 @@ package icfeavoir.pfe.proxy;
 
 import android.util.Log;
 
-import com.google.gson.Gson;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import icfeavoir.pfe.communication.NOTESCommunication;
@@ -58,11 +55,10 @@ public class NOTESProxy extends Proxy {
                     Note note;
                     for (NoteDBModel noteDB : notesDB) {
                         note = new Note(
-                                noteDB.getUserId(),
-                                noteDB.getForename(),
-                                noteDB.getSurname(),
-                                noteDB.getNote(),
-                                noteDB.getAvgNote()
+                                null,
+                                null,
+                                noteDB.getProfUsername(),
+                                noteDB.getNote()
                         );
                         notes.add(note);
                     }
@@ -78,16 +74,18 @@ public class NOTESProxy extends Proxy {
     @Override
     public void returnDataAfterInternet(JSONObject json) {
         List<Note> notes = new ArrayList<>();
-        Gson gson = new Gson();
+        Note note;
         try {
             JSONArray notesArr = json.getJSONArray("notes");
-            if (notesArr.length() > 0) {
-                notes = Arrays.asList(gson.fromJson(notesArr.toString(), Note[].class));
+            for (int i = 0; i < notesArr.length(); i++) {
+                JSONObject noteObj = notesArr.getJSONObject(i);
+                note = new Note(noteObj);
+                // add project to the list
+                notes.add(note);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         this.sendDataToController(notes);
         this.saveDataFromInternet(notes);
     }
@@ -99,12 +97,10 @@ public class NOTESProxy extends Proxy {
             List<Note> notes = (List<Note>) elements;
             for (Note note : notes) {
                 noteDBModels.add(new NoteDBModel(
-                        note.getUserId(),
-                        this.projectId,
-                        note.getForename(),
-                        note.getSurname(),
-                        note.getNote(),
-                        note.getAvgNote()
+                        note.getStudent().getStudentId(),
+                        note.getProject().getProjectId(),
+                        note.getProfUsername(),
+                        note.getNote()
                 ));
             }
         } catch (Exception e) {

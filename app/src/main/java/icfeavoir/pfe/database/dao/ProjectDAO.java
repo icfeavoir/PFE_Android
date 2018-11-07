@@ -7,6 +7,7 @@ import android.arch.persistence.room.Query;
 import java.util.List;
 
 import icfeavoir.pfe.database.model.ProjectDBModel;
+import icfeavoir.pfe.model.Student;
 
 @Dao
 public interface ProjectDAO {
@@ -19,6 +20,9 @@ public interface ProjectDAO {
 
     @Query("SELECT * FROM ProjectDBModel where projectId=:projectId")
     ProjectDBModel getProject(int projectId);
+
+    @Query("SELECT * FROM StudentProjectDBModel where projectId=:projectId")
+    List<Student> getStudents(int projectId);
 
     @Insert
     void insert(List<ProjectDBModel> projects);

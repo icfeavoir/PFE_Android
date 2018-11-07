@@ -45,11 +45,11 @@ public class ProjectDBModel {
         return poster;
     }
 
-    public String getSupervisor() {
-        return supervisor;
-    }
-
     public int getJuryId() {
         return this.juryId;
+    }
+
+    public String getSupervisor() {
+        return supervisor;
     }
 }

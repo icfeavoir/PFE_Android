@@ -1,20 +1,21 @@
 package icfeavoir.pfe.proxy;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import icfeavoir.pfe.communication.LIJURCommunication;
 import icfeavoir.pfe.communication.LIPRJCommunication;
 import icfeavoir.pfe.controller.PFEActivity;
 import icfeavoir.pfe.database.Database;
-import icfeavoir.pfe.database.model.JuryDBModel;
+import icfeavoir.pfe.database.model.StudentDBModel;
+import icfeavoir.pfe.database.model.StudentProjectDBModel;
 import icfeavoir.pfe.database.model.ProjectDBModel;
-import icfeavoir.pfe.model.Jury;
+import icfeavoir.pfe.model.Student;
 import icfeavoir.pfe.model.Project;
 
 public class LIPRJProxy extends Proxy {
@@ -56,8 +57,10 @@ public class LIPRJProxy extends Proxy {
                                 projectDB.getConfid(),
                                 projectDB.hasPoster(),
                                 projectDB.getSupervisor(),
-                                projectDB.getJuryId()
+                                projectDB.getJuryId(),
+                                null
                         );
+                        project.fillStudents(getContext(), projectDB);
                         allProjects.add(project);
                     }
 
@@ -74,8 +77,10 @@ public class LIPRJProxy extends Proxy {
     public void saveDataFromInternet(List<?> elements) {
         Project project;
         final List<ProjectDBModel> projectsDB = new ArrayList<>();
+        final List<StudentProjectDBModel> studentProjectDBModels = new ArrayList<>();
+        final List<StudentDBModel> studentDBModels = new ArrayList<>();
 
-        // convert every Jury in JuryDB
+        // convert every Project in ProjectDB
         for (Object obj : elements) {
             try {
                 project = (Project) obj;
@@ -88,6 +93,10 @@ public class LIPRJProxy extends Proxy {
                         project.getSupervisor(),
                         project.getJuryId()
                 ));
+                for (Student p : project.getStudents()) {
+                    studentProjectDBModels.add(new StudentProjectDBModel(p.getStudentId(), project.getProjectId()));
+                    studentDBModels.add(new StudentDBModel(p.getStudentId(), p.getForename(), p.getSurname()));
+                }
             } catch (Exception e){
                 e.printStackTrace();
             }
@@ -97,11 +106,21 @@ public class LIPRJProxy extends Proxy {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                // delete and resave to have the last values
+                // the persons
+                for (StudentDBModel person : studentDBModels) {
+                    Database.getInstance(getContext()).getPersonDAO().delete(person.getStudentId());
+                    Database.getInstance(getContext()).getPersonDAO().insert(person);
+                }
+                // PROJECT : delete and resave to have the last values
                 for (ProjectDBModel project : projectsDB) {
                     Database.getInstance(getContext()).getProjectDAO().delete(project.getProjectId());
                     Database.getInstance(getContext()).getProjectDAO().insert(project);
+
+                    // PersonProject : delete and resave to have the last values
+                    Database.getInstance(getContext()).getPersonProjectDAO().delete(project.getProjectId());
                 }
+                // add all at once
+                Database.getInstance(getContext()).getPersonProjectDAO().insert(studentProjectDBModels);
             }
         }).start();
     }

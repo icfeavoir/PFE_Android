@@ -1,53 +1,43 @@
 package icfeavoir.pfe.model;
 
-import com.google.gson.annotations.SerializedName;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Note {
-    private int userId;
-    private String forename;
-    private String surname;
-    @SerializedName("mynote")
+    private Student student;
+    private Project project;
+    private String profUsername;
     private int note;
-    @SerializedName("avgnote")
-    private int avgNote;
 
-    public Note(int userId, String forename, String surname, int note, int avgNote) {
-        this.userId = userId;
-        this.forename = forename;
-        this.surname = surname;
+    public Note(JSONObject noteObject) {
+        try {
+            this.note = noteObject.has("note") ? noteObject.getInt("note") : -1;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Note(Student student, Project project, String profUsername, int note) {
+        this.student = student;
+        this.project = project;
+        this.profUsername = profUsername;
         this.note = note;
-        this.avgNote = avgNote;
     }
 
-    public int getUserId() {
-        return userId;
+    public Student getStudent() {
+        return student;
     }
 
-    public String getForename() {
-        return forename;
+    public Project getProject() {
+        return project;
     }
 
-    public String getSurname() {
-        return surname;
+    public String getProfUsername() {
+        return profUsername;
     }
 
     public int getNote() {
         return note;
-    }
-
-    public int getAvgNote() {
-        return avgNote;
-    }
-
-    public String getName() {
-        return this.getForename() + " " + this.getSurname();
-    }
-
-    public String toString() {
-        return "[NOTE] " +
-                "userId " + this.getUserId() +
-                " - name " + this.getName() +
-                " - note " + this.getNote() +
-                " - AVG " + this.getAvgNote();
     }
 }

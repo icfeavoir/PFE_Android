@@ -25,4 +25,9 @@
     <string name="title_activity_prj">PRJActivity</string>
 
     <string name="go_to_poster_btn">Poster</string>
+    <string name="no_project_error">Erreur : Aucun projet trouvé</string>
+    <string name="project_confidentiel">CONFIDENTIEL</string>
+    <string name="project_pas_de_superviseur">Pas de superviseur</string>
+    <string name="project_superviseur">Supervisé par : %1$s</string>
+    <string name="project_no_description">Pas de description</string>
 </resources>

@@ -22,8 +22,8 @@ public interface NoteDAO {
     @Query("SELECT * FROM NoteDBModel")
     List<NoteDBModel> getAll();
 
-    @Query("UPDATE NoteDBModel SET note=:newNote WHERE projectId=:projectId AND userId=:userId")
-    void updateNote(int newNote, int projectId, int userId);
+    @Query("UPDATE NoteDBModel SET note=:newNote WHERE projectId=:projectId AND studentId=:studentId")
+    void updateNote(int newNote, int projectId, int studentId);
 
     @Query("DELETE FROM NoteDBModel WHERE projectId=:projectId")
     void deleteByProjectId(int projectId);

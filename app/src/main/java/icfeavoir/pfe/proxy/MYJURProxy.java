@@ -14,8 +14,11 @@ import icfeavoir.pfe.communication.MYJURCommunication;
 import icfeavoir.pfe.controller.PFEActivity;
 import icfeavoir.pfe.database.Database;
 import icfeavoir.pfe.database.model.JuryDBModel;
+import icfeavoir.pfe.database.model.StudentDBModel;
+import icfeavoir.pfe.database.model.StudentProjectDBModel;
 import icfeavoir.pfe.database.model.ProjectDBModel;
 import icfeavoir.pfe.model.Jury;
+import icfeavoir.pfe.model.Student;
 import icfeavoir.pfe.model.Project;
 
 public class MYJURProxy extends Proxy {
@@ -59,8 +62,10 @@ public class MYJURProxy extends Proxy {
                                     projectDB.getConfid(),
                                     projectDB.hasPoster(),
                                     projectDB.getSupervisor(),
-                                    projectDB.getJuryId()
+                                    projectDB.getJuryId(),
+                                    null
                             );
+                            project.fillStudents(getContext(), projectDB);
                             jury.addProject(project);
                         }
 
@@ -81,6 +86,8 @@ public class MYJURProxy extends Proxy {
         Jury jury;
         final List<JuryDBModel> juriesDB = new ArrayList<>();
         final List<ProjectDBModel> projectsDB = new ArrayList<>();
+        final List<StudentProjectDBModel> studentProjectDBModels = new ArrayList<>();
+        final List<StudentDBModel> studentDBModels = new ArrayList<>();
 
         // convert every Jury in JuryDB
         for (Object obj : elements) {
@@ -91,7 +98,19 @@ public class MYJURProxy extends Proxy {
                 // convert every Project in ProjectDB
                 for (Map.Entry<Integer, Project> entry : jury.getProjects().entrySet()) {
                     Project project = entry.getValue();
-                    projectsDB.add(new ProjectDBModel(project.getProjectId(), project.getTitle(), project.getDescription(), project.getConfid(), project.hasPoster(), project.getSupervisor(), jury.getJuryId()));
+                    projectsDB.add(new ProjectDBModel(
+                            project.getProjectId(),
+                            project.getTitle(),
+                            project.getDescription(),
+                            project.getConfid(),
+                            project.hasPoster(),
+                            project.getSupervisor(),
+                            jury.getJuryId())
+                    );
+                    for (Student p : project.getStudents()) {
+                        studentProjectDBModels.add(new StudentProjectDBModel(p.getStudentId(), project.getProjectId()));
+                        studentDBModels.add(new StudentDBModel(p.getStudentId(), p.getForename(), p.getSurname()));
+                    }
                 }
             } catch (Exception e){
                 e.printStackTrace();
@@ -107,9 +126,20 @@ public class MYJURProxy extends Proxy {
                     Database.getInstance(getContext()).getJuryDAO().delete(jury.getJuryId());
                     Database.getInstance(getContext()).getJuryDAO().insert(jury);
                 }
+                // the persons
+                for (StudentDBModel person : studentDBModels) {
+                    Log.i("", "including : " + person.getForename() + " " + person.getSurname()+ " -- " + person.getStudentId());
+                    Database.getInstance(getContext()).getPersonDAO().delete(person.getStudentId());
+                    Database.getInstance(getContext()).getPersonDAO().insert(person);
+                }
+                // the projects
                 for (ProjectDBModel project : projectsDB) {
                     Database.getInstance(getContext()).getProjectDAO().delete(project.getProjectId());
                     Database.getInstance(getContext()).getProjectDAO().insert(project);
+
+                    // PersonProject : delete and resave to have the last values
+                    Database.getInstance(getContext()).getPersonProjectDAO().delete(project.getProjectId());
+                    Database.getInstance(getContext()).getPersonProjectDAO().insert(studentProjectDBModels);
                 }
             }
         }).start();
@@ -120,6 +150,7 @@ public class MYJURProxy extends Proxy {
      */
     @Override
     public void returnDataAfterInternet(JSONObject json) {
+        Log.i("", json.toString());
         ArrayList<Jury> alJuries = new ArrayList<>();
         Jury jury;
         try {

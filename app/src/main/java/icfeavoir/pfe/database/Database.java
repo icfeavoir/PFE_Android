@@ -6,11 +6,15 @@ import android.content.Context;
 import icfeavoir.pfe.database.dao.JuryDAO;
 import icfeavoir.pfe.database.dao.NoteDAO;
 import icfeavoir.pfe.database.dao.OfflineDAO;
+import icfeavoir.pfe.database.dao.StudentDAO;
+import icfeavoir.pfe.database.dao.StudentProjectDAO;
 import icfeavoir.pfe.database.dao.ProjectDAO;
 import icfeavoir.pfe.database.dao.UserDAO;
 import icfeavoir.pfe.database.model.JuryDBModel;
 import icfeavoir.pfe.database.model.NoteDBModel;
 import icfeavoir.pfe.database.model.OfflineDBModel;
+import icfeavoir.pfe.database.model.StudentDBModel;
+import icfeavoir.pfe.database.model.StudentProjectDBModel;
 import icfeavoir.pfe.database.model.ProjectDBModel;
 import icfeavoir.pfe.database.model.UserDBModel;
 
@@ -21,7 +25,9 @@ import icfeavoir.pfe.database.model.UserDBModel;
         ProjectDBModel.class,
         UserDBModel.class,
         OfflineDBModel.class,
-}, version = 7)
+        StudentDBModel.class,
+        StudentProjectDBModel.class,
+}, version = 12)
 public abstract class Database extends RoomDatabase {
 
     private static final String DB_NAME = "database.db";
@@ -48,4 +54,6 @@ public abstract class Database extends RoomDatabase {
     public abstract UserDAO getUserDAO();
     public abstract NoteDAO getNoteDAO();
     public abstract OfflineDAO getOfflineDAO();
+    public abstract StudentDAO getPersonDAO();
+    public abstract StudentProjectDAO getPersonProjectDAO();
 }
