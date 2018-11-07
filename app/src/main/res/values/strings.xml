@@ -22,4 +22,7 @@
     </string>
     <string name="title_activity_myprj">MYPRJActivity</string>
     <string name="title_activity_jyinf">JYINFActivity</string>
+    <string name="title_activity_prj">PRJActivity</string>
+
+    <string name="go_to_poster_btn">Poster</string>
 </resources>

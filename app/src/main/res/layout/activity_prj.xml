@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".controller.PRJActivity">
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:rowCount="2"
+        android:columnCount="1"
+        >
+
+        <TextView
+            android:id="@+id/project_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="TITRE"
+            android:textSize="24dp"
+            android:textColor="@color/white"
+            android:background="@color/darkBlue"
+            android:padding="10dp"
+            android:layout_row="0"
+            android:layout_column="0"
+            />
+
+        <Button
+            android:id="@+id/project_poster_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:textColor="@color/darkBlue"
+            android:background="@drawable/pretty_button"
+            android:layout_row="1"
+            android:layout_column="0"
+            />
+
+    </GridLayout>
+</ScrollView>

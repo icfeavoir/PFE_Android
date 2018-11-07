@@ -21,6 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import icfeavoir.pfe.R;
@@ -59,14 +60,6 @@ public class MYJURActivity extends PFEActivity implements NavigationView.OnNavig
         this.myjurAdapter = new MYJURAdapter(this);
         mRecyclerView.setAdapter(this.myjurAdapter);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-            }
-        });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -76,7 +69,6 @@ public class MYJURActivity extends PFEActivity implements NavigationView.OnNavig
         navigationView.setNavigationItemSelectedListener(this);
 
         attemptMYJUR();
-
     }
 
     @Override
@@ -118,7 +110,6 @@ public class MYJURActivity extends PFEActivity implements NavigationView.OnNavig
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -128,7 +119,6 @@ public class MYJURActivity extends PFEActivity implements NavigationView.OnNavig
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -138,8 +128,15 @@ public class MYJURActivity extends PFEActivity implements NavigationView.OnNavig
 
     @Override
     public void displayData(Object data) {
-        ArrayList<Jury> juries = (ArrayList<Jury>) data;
+        List<Jury> juries = (List<Jury>) data;
         this.myjurAdapter.setJuries(juries);
+
+        Intent goToPRJActivity = new Intent(this, PRJActivity.class);
+        Bundle b = new Bundle();
+        b.putInt("projectId", 1);
+        goToPRJActivity.putExtras(b);
+        this.startActivity(goToPRJActivity);
+        this.finish();
     }
 
     public void clickJuryCard(Jury jury) {

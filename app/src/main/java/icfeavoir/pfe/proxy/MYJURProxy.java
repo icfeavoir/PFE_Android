@@ -47,9 +47,20 @@ public class MYJURProxy extends Proxy {
                     for (JuryDBModel juryDB : juries) {
                         jury = new Jury(juryDB.getJuryId(), juryDB.getDate());
                         // find projects
-                        List<ProjectDBModel> projects = Database.getInstance(getContext()).getProjectDAO().getProjectByJury(jury.getJuryId());
+                        List<ProjectDBModel> projects = Database.getInstance(getContext())
+                                .getProjectDAO()
+                                .getProjectByJury(jury.getJuryId());
+
                         for (ProjectDBModel projectDB : projects) {
-                            project = new Project(projectDB.getProjectId(), projectDB.getTitle(), projectDB.getDescription(), projectDB.getConfid(), projectDB.hasPoster(), projectDB.getSupervisor());
+                            project = new Project(
+                                    projectDB.getProjectId(),
+                                    projectDB.getTitle(),
+                                    projectDB.getDescription(),
+                                    projectDB.getConfid(),
+                                    projectDB.hasPoster(),
+                                    projectDB.getSupervisor(),
+                                    projectDB.getJuryId()
+                            );
                             jury.addProject(project);
                         }
 

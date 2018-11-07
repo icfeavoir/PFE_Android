@@ -29,6 +29,7 @@
             android:name=".controller.JYINFActivity"
             android:label="@string/title_activity_jyinf"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".controller.PRJActivity"></activity>
     </application>
 
 </manifest>

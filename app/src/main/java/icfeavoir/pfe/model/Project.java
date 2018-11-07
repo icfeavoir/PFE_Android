@@ -14,6 +14,7 @@ public class Project {
     private boolean poster;
     private String supervisor;
     private int studentId;
+    private int juryId;
 
     public Project(JSONObject projectObject) {
         try {
@@ -24,18 +25,20 @@ public class Project {
             this.poster = projectObject.has("poster") ? projectObject.getBoolean("poster") : false;
             this.supervisor = projectObject.has("supervisor") ? (projectObject.getJSONObject("supervisor").getString("forename") + " " + projectObject.getJSONObject("supervisor").getString("surname")) : "";
             this.studentId = projectObject.has("students") ? (projectObject.getJSONArray("students").getJSONObject(0).getInt("userId")) : 0;
+            this.juryId = projectObject.has("juryId") ? projectObject.getInt("juryId") : 0;
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public Project(int projectId, String title, String description, int confid, boolean poster, String supervisor) {
+    public Project(int projectId, String title, String description, int confid, boolean poster, String supervisor, int juryId) {
         this.projectId = projectId;
         this.title = title;
         this.description = description;
         this.confid = confid;
         this.poster = poster;
         this.supervisor = supervisor;
+        this.juryId = juryId;
     }
 
     public int getProjectId() {
@@ -72,5 +75,15 @@ public class Project {
 
     public int getStudentId() {
         return studentId;
+    }
+
+    public int getJuryId() {
+        return juryId;
+    }
+
+    @Override
+    public String toString() {
+        return "[PROJET] " +
+                "";
     }
 }

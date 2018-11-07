@@ -78,6 +78,7 @@ public class LoginActivity extends PFEActivity implements LoaderCallbacks<Cursor
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
 
+        final PFEActivity it = this;
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -85,6 +86,18 @@ public class LoginActivity extends PFEActivity implements LoaderCallbacks<Cursor
                 if (user != null){
                     connect(user.getUsername(), user.getPassword());
                 }
+                // TO REMOVE
+//                else {
+//                    LOGONProxy proxy = new LOGONProxy(it);
+//                    JSONObject json = new JSONObject();
+//                    try {
+//                        json.put("user", "clavrmic");
+//                        json.put("pass", "4hH9sUFOi2gx");
+//                        proxy.call(json);
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
             }
         }).start();
 
@@ -268,16 +281,19 @@ public class LoginActivity extends PFEActivity implements LoaderCallbacks<Cursor
 
     @Override
     public void displayData(Object data) {
-        Log.i("LOG", data.toString());
         if ((boolean) data){
             Intent intent = new Intent(this, MYJURActivity.class);
             startActivity(intent);
         }
         else {
-            TextView textView = findViewById(R.id.error_message);
-            textView.setVisibility(View.VISIBLE);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    TextView textView = findViewById(R.id.error_message);
+                    textView.setVisibility(View.VISIBLE);
+                }
+            });
         }
-
     }
 
 
