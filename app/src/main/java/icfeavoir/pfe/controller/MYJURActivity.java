@@ -130,24 +130,17 @@ public class MYJURActivity extends PFEActivity implements NavigationView.OnNavig
     public void displayData(Object data) {
         List<Jury> juries = (List<Jury>) data;
         this.myjurAdapter.setJuries(juries);
-
-        Intent goToPRJActivity = new Intent(this, PRJActivity.class);
-        Bundle b = new Bundle();
-        b.putInt("projectId", 1);
-        goToPRJActivity.putExtras(b);
-        this.startActivity(goToPRJActivity);
-        this.finish();
     }
 
     public void clickJuryCard(Jury jury) {
         Intent intent = new Intent(this, JYINFActivity.class);
         intent.putExtra(JURY_EXTRA, jury.getJuryId());
         startActivity(intent);
+        finish();
     }
 
     private void attemptMYJUR() {
         MYJURProxy proxy = new MYJURProxy(this);
-        JSONObject json = new JSONObject();
-        proxy.call(json);
+        proxy.call();
     }
 }

@@ -2,6 +2,7 @@ package icfeavoir.pfe.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,19 +39,19 @@ public class JYINFAdapter extends RecyclerView.Adapter<JYINFAdapter.JYINFViewHol
     @Override
     public JYINFAdapter.JYINFViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View jyinfView = LayoutInflater.from(parent.getContext()).inflate(R.layout.jyinf_card_layout, parent, false);
-        return new JYINFAdapter.JYINFViewHolder(jyinfView);
+        return new JYINFViewHolder(jyinfView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull JYINFAdapter.JYINFViewHolder holder, int position) {
         final Project project = projects.get(position);
-        holder.project_project_id.setText(project.getProjectId());
+        holder.project_project_id.setText("PFE n°" + String.valueOf(project.getProjectId()));
         holder.project_title.setText(project.getTitle());
+        Log.i("oops", ""+project.getProjectId());
 
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                activity.clickProjectCard(project);
+            public void onClick(View v) { activity.clickProjectCard(project);
             }
         });
     }
