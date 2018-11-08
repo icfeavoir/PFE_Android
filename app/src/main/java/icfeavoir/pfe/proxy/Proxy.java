@@ -32,7 +32,8 @@ public abstract class Proxy {
 
     public void call(JSONObject json) {
         this.beforeCalling(json);
-        if (Utils.isConnected(activity.getApplicationContext())) {
+        // TODO: remove the
+        if (false && Utils.isConnected(activity.getApplicationContext())) {
             // internet connection
             // add token is exists
             User user = User.getInstance();

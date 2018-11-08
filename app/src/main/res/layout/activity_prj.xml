@@ -72,6 +72,18 @@
             android:layout_column="0"
             />
 
+        <LinearLayout
+            android:id="@+id/project_students_list"
+            android:layout_row="4"
+            android:layout_column="0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+
+        </LinearLayout>
+
         <TextView
             android:id="@+id/project_description"
             android:layout_width="match_parent"
@@ -80,7 +92,7 @@
             android:textSize="14sp"
             android:fontFamily="serif"
             android:layout_margin="5dp"
-            android:layout_row="4"
+            android:layout_row="5"
             android:layout_column="0"
             />
 

@@ -1,5 +1,7 @@
 package icfeavoir.pfe.proxy;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -7,7 +9,9 @@ import icfeavoir.pfe.communication.Communication;
 import icfeavoir.pfe.communication.NEWNTCommunication;
 import icfeavoir.pfe.controller.PFEActivity;
 import icfeavoir.pfe.database.Database;
+import icfeavoir.pfe.database.model.NoteDBModel;
 import icfeavoir.pfe.database.model.OfflineDBModel;
+import icfeavoir.pfe.model.User;
 
 public class NEWNTProxy extends Proxy {
     public NEWNTProxy(PFEActivity activity) {
@@ -41,8 +45,22 @@ public class NEWNTProxy extends Proxy {
                     try {
                         int note = json.getInt("note");
                         int projectId = json.getInt("proj");
-                        int userId = json.getInt("student");
-                        Database.getInstance(getContext()).getNoteDAO().updateNote(note, projectId, userId);
+                        int studentId = json.getInt("student");
+                        String profUsername = User.getInstance().getUsername();
+                        // check if note already exists
+                        NoteDBModel noteDB = Database.getInstance(getContext())
+                                .getNoteDAO()
+                                .getNoteByStudentByProjectIdByProfUsername(studentId, projectId, profUsername);
+                        if (noteDB == null) {
+                            // save
+                            noteDB = new NoteDBModel(studentId, projectId, profUsername, note);
+                            Database.getInstance(getContext()).getNoteDAO().insert(noteDB);
+                            Log.i("", "First insert");
+                        } else {
+                            // update
+                            Database.getInstance(getContext()).getNoteDAO().updateNote(note, projectId, studentId, profUsername);
+                            Log.i("", "update");
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

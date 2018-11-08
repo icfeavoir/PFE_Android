@@ -55,17 +55,7 @@ public class MYJURProxy extends Proxy {
                                 .getProjectByJury(jury.getJuryId());
 
                         for (ProjectDBModel projectDB : projects) {
-                            project = new Project(
-                                    projectDB.getProjectId(),
-                                    projectDB.getTitle(),
-                                    projectDB.getDescription(),
-                                    projectDB.getConfid(),
-                                    projectDB.hasPoster(),
-                                    projectDB.getSupervisor(),
-                                    projectDB.getJuryId(),
-                                    null
-                            );
-                            project.fillStudents(getContext(), projectDB);
+                            project = new Project(projectDB, getContext());
                             jury.addProject(project);
                         }
 
@@ -129,8 +119,8 @@ public class MYJURProxy extends Proxy {
                 // the persons
                 for (StudentDBModel person : studentDBModels) {
                     Log.i("", "including : " + person.getForename() + " " + person.getSurname()+ " -- " + person.getStudentId());
-                    Database.getInstance(getContext()).getPersonDAO().delete(person.getStudentId());
-                    Database.getInstance(getContext()).getPersonDAO().insert(person);
+                    Database.getInstance(getContext()).getStudentDAO().delete(person.getStudentId());
+                    Database.getInstance(getContext()).getStudentDAO().insert(person);
                 }
                 // the projects
                 for (ProjectDBModel project : projectsDB) {
@@ -138,8 +128,8 @@ public class MYJURProxy extends Proxy {
                     Database.getInstance(getContext()).getProjectDAO().insert(project);
 
                     // PersonProject : delete and resave to have the last values
-                    Database.getInstance(getContext()).getPersonProjectDAO().delete(project.getProjectId());
-                    Database.getInstance(getContext()).getPersonProjectDAO().insert(studentProjectDBModels);
+                    Database.getInstance(getContext()).getStudentProjectDAO().delete(project.getProjectId());
+                    Database.getInstance(getContext()).getStudentProjectDAO().insert(studentProjectDBModels);
                 }
             }
         }).start();

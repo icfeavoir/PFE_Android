@@ -48,20 +48,8 @@ public class LIPRJProxy extends Proxy {
                 try {
                     List<ProjectDBModel> projects = Database.getInstance(getContext()).getProjectDAO().getAllProjects();
                     // convert ProjectDB in Project
-                    Project project;
                     for (ProjectDBModel projectDB : projects) {
-                        project = new Project(
-                                projectDB.getProjectId(),
-                                projectDB.getTitle(),
-                                projectDB.getDescription(),
-                                projectDB.getConfid(),
-                                projectDB.hasPoster(),
-                                projectDB.getSupervisor(),
-                                projectDB.getJuryId(),
-                                null
-                        );
-                        project.fillStudents(getContext(), projectDB);
-                        allProjects.add(project);
+                        allProjects.add(new Project(projectDB, getContext()));
                     }
 
                     // display data
@@ -84,15 +72,7 @@ public class LIPRJProxy extends Proxy {
         for (Object obj : elements) {
             try {
                 project = (Project) obj;
-                projectsDB.add(new ProjectDBModel(
-                        project.getProjectId(),
-                        project.getTitle(),
-                        project.getDescription(),
-                        project.getConfid(),
-                        project.hasPoster(),
-                        project.getSupervisor(),
-                        project.getJuryId()
-                ));
+                projectsDB.add(project.toDB());
                 for (Student p : project.getStudents()) {
                     studentProjectDBModels.add(new StudentProjectDBModel(p.getStudentId(), project.getProjectId()));
                     studentDBModels.add(new StudentDBModel(p.getStudentId(), p.getForename(), p.getSurname()));
@@ -108,8 +88,8 @@ public class LIPRJProxy extends Proxy {
             public void run() {
                 // the persons
                 for (StudentDBModel person : studentDBModels) {
-                    Database.getInstance(getContext()).getPersonDAO().delete(person.getStudentId());
-                    Database.getInstance(getContext()).getPersonDAO().insert(person);
+                    Database.getInstance(getContext()).getStudentDAO().delete(person.getStudentId());
+                    Database.getInstance(getContext()).getStudentDAO().insert(person);
                 }
                 // PROJECT : delete and resave to have the last values
                 for (ProjectDBModel project : projectsDB) {
@@ -117,10 +97,10 @@ public class LIPRJProxy extends Proxy {
                     Database.getInstance(getContext()).getProjectDAO().insert(project);
 
                     // PersonProject : delete and resave to have the last values
-                    Database.getInstance(getContext()).getPersonProjectDAO().delete(project.getProjectId());
+                    Database.getInstance(getContext()).getStudentProjectDAO().delete(project.getProjectId());
                 }
                 // add all at once
-                Database.getInstance(getContext()).getPersonProjectDAO().insert(studentProjectDBModels);
+                Database.getInstance(getContext()).getStudentProjectDAO().insert(studentProjectDBModels);
             }
         }).start();
     }
@@ -159,11 +139,9 @@ public class LIPRJProxy extends Proxy {
             // if json has a specific id, we only return the selected project
             if (this.jsonSent.has("projectId")) {
                 final int projectId = this.jsonSent.getInt("projectId");
-                Project project = null;
                 for (Project p : projects) {
                     if (p.getProjectId() == projectId) {
-                        project = p;
-                        this.getActivity().displayData(project);
+                        this.getActivity().displayData(p);
                         return;
                     }
                 }

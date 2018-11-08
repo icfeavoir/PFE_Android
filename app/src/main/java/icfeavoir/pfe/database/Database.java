@@ -54,6 +54,6 @@ public abstract class Database extends RoomDatabase {
     public abstract UserDAO getUserDAO();
     public abstract NoteDAO getNoteDAO();
     public abstract OfflineDAO getOfflineDAO();
-    public abstract StudentDAO getPersonDAO();
-    public abstract StudentProjectDAO getPersonProjectDAO();
+    public abstract StudentDAO getStudentDAO();
+    public abstract StudentProjectDAO getStudentProjectDAO();
 }

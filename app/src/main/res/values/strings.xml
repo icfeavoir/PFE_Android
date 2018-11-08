@@ -30,4 +30,5 @@
     <string name="project_pas_de_superviseur">Pas de superviseur</string>
     <string name="project_superviseur">Supervisé par : %1$s</string>
     <string name="project_no_description">Pas de description</string>
+    <string name="project_student_noter">Noter</string>
 </resources>
