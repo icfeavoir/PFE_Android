@@ -82,11 +82,17 @@ public class LoginActivity extends PFEActivity implements LoaderCallbacks<Cursor
         new Thread(new Runnable() {
             @Override
             public void run() {
+                // TODO REMOVE
+                // FAKE CONNECT WITHOUT INTERNET (use once)
+//                Database.getInstance(getApplicationContext())
+//                        .getUserDAO()
+//                        .insert(new UserDBModel("clavrmic", "4hH9sUFOi2gx"));
                 UserDBModel user = Database.getInstance(getApplicationContext()).getUserDAO().getUser();
                 if (user != null){
                     connect(user.getUsername(), user.getPassword());
                 }
-                // TO REMOVE
+//                 TODO REMOVE
+//                FAKE CONNECT WITH INTERNET
 //                else {
 //                    LOGONProxy proxy = new LOGONProxy(it);
 //                    JSONObject json = new JSONObject();
@@ -195,16 +201,6 @@ public class LoginActivity extends PFEActivity implements LoaderCallbacks<Cursor
 
     private void deconnect() {
         Database.getInstance(this.getApplicationContext()).getUserDAO().delete();
-    }
-
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
-    }
-
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
     }
 
     /**
