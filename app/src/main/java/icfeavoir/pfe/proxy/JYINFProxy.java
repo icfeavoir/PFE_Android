@@ -46,17 +46,7 @@ public class JYINFProxy extends Proxy {
                     // convert ProjectDB in Project
                     Project project;
                     for (ProjectDBModel projectDB : projectsDB){
-                        project = new Project(
-                                projectDB.getProjectId(),
-                                projectDB.getTitle(),
-                                projectDB.getDescription(),
-                                projectDB.getConfid(),
-                                projectDB.hasPoster(),
-                                projectDB.getSupervisor(),
-                                projectDB.getJuryId(),
-                                null
-                        );
-                        project.fillStudents(getContext(),projectDB);
+                        project = new Project(projectDB, getContext());
                         allProjects.add(project);
                     }
 
