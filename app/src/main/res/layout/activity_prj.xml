@@ -60,6 +60,20 @@
 
         </RelativeLayout>
 
+
+        <Button
+            android:id="@+id/project_global_note_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:textColor="@color/darkBlue"
+            android:background="@drawable/pretty_button"
+            android:text="@string/noter_le_projet"
+            android:layout_row="3"
+            android:layout_column="0"
+            />
+
         <Button
             android:id="@+id/project_poster_button"
             android:layout_width="wrap_content"
@@ -68,9 +82,20 @@
             android:layout_margin="10dp"
             android:textColor="@color/darkBlue"
             android:background="@drawable/pretty_button"
-            android:layout_row="3"
+            android:text="@string/go_to_poster_btn"
+            android:layout_row="4"
             android:layout_column="0"
             />
+
+        <LinearLayout
+            android:id="@+id/project_students_list"
+            android:layout_row="5"
+            android:layout_column="0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+        </LinearLayout>
 
         <TextView
             android:id="@+id/project_description"
@@ -80,7 +105,7 @@
             android:textSize="14sp"
             android:fontFamily="serif"
             android:layout_margin="5dp"
-            android:layout_row="4"
+            android:layout_row="6"
             android:layout_column="0"
             />
 

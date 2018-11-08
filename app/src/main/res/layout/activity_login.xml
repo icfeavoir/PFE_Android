@@ -40,6 +40,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_email"
+                    android:text="clavrmic"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:singleLine="true" />
@@ -53,6 +54,7 @@
                 <EditText
                     android:id="@+id/password"
                     android:layout_width="match_parent"
+                    android:text="4hH9sUFOi2gx"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
                     android:textColorHint="@color/black"

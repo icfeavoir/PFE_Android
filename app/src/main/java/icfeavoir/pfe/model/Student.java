@@ -1,5 +1,9 @@
 package icfeavoir.pfe.model;
 
+import android.content.Context;
+
+import icfeavoir.pfe.database.model.StudentDBModel;
+
 public class Student {
     private int studentId;
     private String forename;
@@ -9,6 +13,14 @@ public class Student {
         this.studentId = studentId;
         this.forename = forename;
         this.surname = surname;
+    }
+
+    public Student(StudentDBModel studentDBModel, Context context) {
+        this(
+                studentDBModel.getStudentId(),
+                studentDBModel.getForename(),
+                studentDBModel.getSurname()
+        );
     }
 
     public int getStudentId() {
@@ -29,5 +41,9 @@ public class Student {
                 "studentId: " + this.studentId + " | " +
                 "forename: " + this.forename + " | " +
                 "surname: " + this.surname;
+    }
+
+    public String getFullName() {
+        return this.getForename() + " " + this.getSurname();
     }
 }

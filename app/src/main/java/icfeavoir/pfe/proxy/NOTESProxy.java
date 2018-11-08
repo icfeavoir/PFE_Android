@@ -52,15 +52,8 @@ public class NOTESProxy extends Proxy {
                 try {
                     List<NoteDBModel> notesDB = Database.getInstance(getContext()).getNoteDAO().getNotesByProjectId(projectId);
                     // convert NoteDB in Note
-                    Note note;
                     for (NoteDBModel noteDB : notesDB) {
-                        note = new Note(
-                                null,
-                                null,
-                                noteDB.getProfUsername(),
-                                noteDB.getNote()
-                        );
-                        notes.add(note);
+                        notes.add(new Note(noteDB, getContext()));
                     }
                     // display data
                     sendDataToController(notes);
