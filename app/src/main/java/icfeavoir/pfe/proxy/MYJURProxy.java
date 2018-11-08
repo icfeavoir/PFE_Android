@@ -88,15 +88,7 @@ public class MYJURProxy extends Proxy {
                 // convert every Project in ProjectDB
                 for (Map.Entry<Integer, Project> entry : jury.getProjects().entrySet()) {
                     Project project = entry.getValue();
-                    projectsDB.add(new ProjectDBModel(
-                            project.getProjectId(),
-                            project.getTitle(),
-                            project.getDescription(),
-                            project.getConfid(),
-                            project.hasPoster(),
-                            project.getSupervisor(),
-                            jury.getJuryId())
-                    );
+                    projectsDB.add(project.toDB());
                     for (Student p : project.getStudents()) {
                         studentProjectDBModels.add(new StudentProjectDBModel(p.getStudentId(), project.getProjectId()));
                         studentDBModels.add(new StudentDBModel(p.getStudentId(), p.getForename(), p.getSurname()));

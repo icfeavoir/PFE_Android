@@ -29,6 +29,9 @@
     <string name="project_confidentiel">CONFIDENTIEL</string>
     <string name="project_pas_de_superviseur">Pas de superviseur</string>
     <string name="project_superviseur">Supervisé par : %1$s</string>
+    <string name="project_avg_note">Moyenne : %1$s</string>
     <string name="project_no_description">Pas de description</string>
     <string name="project_student_noter">Noter</string>
+    <string name="noter_le_projet">Noter le projet</string>
+    <string name="project_student_no_note">0 note</string>
 </resources>
