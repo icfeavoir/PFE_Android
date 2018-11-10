@@ -29,7 +29,9 @@
             android:name=".controller.JYINFActivity"
             android:label="@string/title_activity_jyinf"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".controller.PRJActivity"></activity>
+        <activity android:name=".controller.PRJActivity" />
+        <receiver android:name=".notification.NotificationPublisher" />
+
     </application>
 
 </manifest>

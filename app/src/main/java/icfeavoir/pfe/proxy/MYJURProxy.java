@@ -6,7 +6,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +25,7 @@ import icfeavoir.pfe.model.Jury;
 import icfeavoir.pfe.model.ModelConstructor;
 import icfeavoir.pfe.model.Student;
 import icfeavoir.pfe.model.Project;
+import icfeavoir.pfe.utils.Utils;
 
 public class MYJURProxy extends Proxy {
 
@@ -151,14 +156,45 @@ public class MYJURProxy extends Proxy {
         // at the end we display data
         this.sendDataToController(alJuries);
 
+        // saving the notification to send
+        this.saveJuryNotification(alJuries);
+
         // and we save everything in the db
         this.saveDataFromInternet(alJuries);
+    }
+
+    private void saveJuryNotification(List<Jury> juries) {
+//        Jury testJury = new Jury(123456, "2018-11-11");
+//        juries.add(testJury);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        for (Jury jury : juries) {
+            try {
+                Date today = Calendar.getInstance().getTime();
+                Date juryDate = sdf.parse(jury.getDate());
+                long diffInMs = juryDate.getTime() - today.getTime();
+                if (diffInMs > 0) {
+                    Utils.scheduleNotification(
+                            getContext(),
+                            Utils.getNotification(getContext(), "Jury n°" + jury.getJuryId(), "Vous avez bientôt un jury !"),
+                            (int) diffInMs,
+                            jury.getJuryId()
+                    );
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     @Override
     void sendDataToController(Object elements) {
         try {
             List<Jury> juries = (List<Jury>) elements;
+
+            // TODO: remove this line
+            this.saveJuryNotification(juries);
+
             this.getActivity().displayData(juries);
         } catch (Exception e) {
             e.printStackTrace();

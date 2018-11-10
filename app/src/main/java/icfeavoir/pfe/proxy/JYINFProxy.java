@@ -13,8 +13,11 @@ import icfeavoir.pfe.communication.JYINFCommunication;
 import icfeavoir.pfe.controller.PFEActivity;
 import icfeavoir.pfe.database.Database;
 import icfeavoir.pfe.database.model.ProjectDBModel;
+import icfeavoir.pfe.database.model.StudentDBModel;
+import icfeavoir.pfe.database.model.StudentProjectDBModel;
 import icfeavoir.pfe.model.ModelConstructor;
 import icfeavoir.pfe.model.Project;
+import icfeavoir.pfe.model.Student;
 
 public class JYINFProxy extends Proxy {
 
@@ -56,6 +59,50 @@ public class JYINFProxy extends Proxy {
                 } catch (Exception e){
                     e.printStackTrace();
                 }
+            }
+        }).start();
+    }
+
+    @Override
+    public void saveDataFromInternet(List<?> elements) {
+        Project project;
+        final List<ProjectDBModel> projectsDB = new ArrayList<>();
+        final List<StudentProjectDBModel> studentProjectDBModels = new ArrayList<>();
+        final List<StudentDBModel> studentDBModels = new ArrayList<>();
+
+        // convert every Project in ProjectDB
+        for (Object obj : elements) {
+            try {
+                project = (Project) obj;
+                projectsDB.add((ProjectDBModel) ModelConstructor.dbModelFactory(project));
+                for (Student p : project.getStudents()) {
+                    studentProjectDBModels.add(new StudentProjectDBModel(p.getStudentId(), project.getProjectId()));
+                    studentDBModels.add(new StudentDBModel(p.getStudentId(), p.getForename(), p.getSurname()));
+                }
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        // save data in DB with new Thread
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // the persons
+                for (StudentDBModel person : studentDBModels) {
+                    Database.getInstance(getContext()).getStudentDAO().delete(person.getStudentId());
+                    Database.getInstance(getContext()).getStudentDAO().insert(person);
+                }
+                // PROJECT : delete and resave to have the last values
+                for (ProjectDBModel project : projectsDB) {
+                    Database.getInstance(getContext()).getProjectDAO().delete(project.getProjectId());
+                    Database.getInstance(getContext()).getProjectDAO().insert(project);
+
+                    // PersonProject : delete and resave to have the last values
+                    Database.getInstance(getContext()).getStudentProjectDAO().delete(project.getProjectId());
+                }
+                // add all at once
+                Database.getInstance(getContext()).getStudentProjectDAO().insert(studentProjectDBModels);
             }
         }).start();
     }
