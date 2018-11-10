@@ -4,7 +4,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
 @Entity
-public class StudentDBModel {
+public class StudentDBModel extends DBModel {
 
     @PrimaryKey private final int studentId;
     private final String forename;

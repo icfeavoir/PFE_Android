@@ -32,6 +32,7 @@ import icfeavoir.pfe.model.Student;
 import icfeavoir.pfe.model.User;
 import icfeavoir.pfe.proxy.LIPRJProxy;
 import icfeavoir.pfe.proxy.NEWNTProxy;
+import icfeavoir.pfe.proxy.NOTESProxy;
 
 public class PRJActivity extends PFEActivity {
 
@@ -158,8 +159,8 @@ public class PRJActivity extends PFEActivity {
             input.setText(notes.get(student.getStudentId()) + "");
         }
 
-        final NEWNTProxy proxy = new NEWNTProxy(this);
-        final JSONObject json = new JSONObject();
+        final NEWNTProxy NEWNTproxy = new NEWNTProxy(this);
+        final JSONObject NEWNTjson = new JSONObject();
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -169,10 +170,10 @@ public class PRJActivity extends PFEActivity {
                         throw new Exception("Invalid note");
                     }
                     notes.put(student.getStudentId(), note);
-                    json.put("proj", projectId);
-                    json.put("student", student.getStudentId());
-                    json.put("note", note);
-                    proxy.call(json);
+                    NEWNTjson.put("proj", projectId);
+                    NEWNTjson.put("student", student.getStudentId());
+                    NEWNTjson.put("note", note);
+                    NEWNTproxy.call(NEWNTjson);
 
                 } catch (Exception e) {
                     // probably a string or nothing or -1 or 42
@@ -191,6 +192,7 @@ public class PRJActivity extends PFEActivity {
     }
 
     private void addStudents() {
+        this.studentsList.removeAllViews();
         for (final Student student : this.project.getStudents()) {
             View studentView = inflater.inflate(R.layout.project_student_note_button, this.studentsList, false);
 
@@ -218,65 +220,83 @@ public class PRJActivity extends PFEActivity {
         }
     }
 
+    private void setProjectInfo(final Project project) {
+        this.project = project;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                title.setText(project.getTitle());
+                if (! project.getSupervisor().equals("")) {
+                    supervisor.setText(String.format(getResources().getString(R.string.project_superviseur), project.getSupervisor()));
+                }
+                globalNoteButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showGlobalNotePopup();
+                    }
+                });
+                confid.setVisibility(project.getConfid() == 1 ? View.VISIBLE : View.INVISIBLE);
+                description.setText(project.getDescription().isEmpty() ? getResources().getString(R.string.project_no_description) : project.getDescription());
+            }
+        });
+
+        // call the notes proxy
+        NOTESProxy proxy = new NOTESProxy(this);
+        JSONObject json = new JSONObject();
+        try {
+            json.put("proj", projectId);
+            proxy.call(json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setProjectNotes(final List<Note> notes) {
+        Map<Integer, List<Integer>> studentsToNotes = new HashMap<>();
+        for (Note note : notes) {
+            if (note.getProfUsername().equals(User.getInstance().getUsername())) {
+                // this prof note
+                this.notes.put(note.getStudent().getStudentId(), note.getNote());
+            }
+            if (studentsToNotes.containsKey(note.getStudent().getStudentId())) {
+                // we add a note in this list
+                studentsToNotes.get(note.getStudent().getStudentId()).add(note.getNote());
+            } else {
+                studentsToNotes.put(note.getStudent().getStudentId(), new ArrayList<Integer>());
+                studentsToNotes.get(note.getStudent().getStudentId()).add(note.getNote());
+            }
+        }
+
+        for (Map.Entry<Integer, List<Integer>> entry : studentsToNotes.entrySet()) {
+            int studentId = entry.getKey();
+            List<Integer> userNotes = entry.getValue();
+            int avg = -1;
+            int sum = 0;
+            for (int note : userNotes ) {
+                sum += note;
+            }
+            if (userNotes.size() > 0) {
+                avg = sum / userNotes.size();
+            }
+            this.avgNotes.put(studentId, avg);
+        }
+
+        // we add students after we get project infos + notes
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                addStudents();
+            }
+        });
+    }
+
     @Override
     public void displayData(Object data) {
-        try {
-            this.project = (Project) data;
-
-            // get the notes
-            final List<NoteDBModel> notesDB = Database.getInstance(getApplicationContext())
-                    .getNoteDAO()
-                    .getNotesByProjectId(project.getProjectId());
-
-            Map<Integer, List<Integer>> studentsToNotes = new HashMap<>();
-            for (NoteDBModel noteDBModel : notesDB) {
-                if (noteDBModel.getProfUsername().equals(User.getInstance().getUsername())) {
-                    // this prof note
-                    this.notes.put(noteDBModel.getStudentId(), noteDBModel.getNote());
-                }
-                if (studentsToNotes.containsKey(noteDBModel.getStudentId())) {
-                    // we add a note in this list
-                    studentsToNotes.get(noteDBModel.getStudentId()).add(noteDBModel.getNote());
-                } else {
-                    studentsToNotes.put(noteDBModel.getStudentId(), new ArrayList<Integer>());
-                    studentsToNotes.get(noteDBModel.getStudentId()).add(noteDBModel.getNote());
-                }
-            }
-
-            for (Map.Entry<Integer, List<Integer>> entry : studentsToNotes.entrySet()) {
-                int studentId = entry.getKey();
-                List<Integer> userNotes = entry.getValue();
-                int avg = -1;
-                int sum = 0;
-                for (int note : userNotes ) {
-                    sum += note;
-                }
-                if (userNotes.size() > 0) {
-                    avg = sum / userNotes.size();
-                }
-                this.avgNotes.put(studentId, avg);
-            }
-
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    title.setText(project.getTitle());
-                    if (! project.getSupervisor().equals("")) {
-                        supervisor.setText(String.format(getResources().getString(R.string.project_superviseur), project.getSupervisor()));
-                    }
-                    globalNoteButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            showGlobalNotePopup();
-                        }
-                    });
-                    confid.setVisibility(project.getConfid() == 1 ? View.VISIBLE : View.INVISIBLE);
-                    description.setText(project.getDescription().isEmpty() ? getResources().getString(R.string.project_no_description) : project.getDescription());
-                    addStudents();
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (data instanceof Project) {
+            this.setProjectInfo((Project) data);
+        } else if (data instanceof ArrayList && ((ArrayList) data).size() > 0 && ((ArrayList) data).get(0) instanceof Note) {
+            this.setProjectNotes((ArrayList<Note>) data);
+        } else {
             this.noProjectException();
         }
     }

@@ -14,7 +14,7 @@ import icfeavoir.pfe.database.model.StudentDBModel;
 import icfeavoir.pfe.database.model.StudentProjectDBModel;
 import icfeavoir.pfe.database.model.ProjectDBModel;
 
-public class Project {
+public class Project extends Model {
 
     private int projectId;
     private String title;
@@ -68,32 +68,6 @@ public class Project {
         this.students = students;
     }
 
-    public Project(ProjectDBModel projectDBModel, Context context) {
-        this(
-                projectDBModel.getProjectId(),
-                projectDBModel.getTitle(),
-                projectDBModel.getDescription(),
-                projectDBModel.getConfid(),
-                projectDBModel.hasPoster(),
-                projectDBModel.getSupervisor(),
-                projectDBModel.getJuryId(),
-                new ArrayList<Student>()
-        );
-        this.fillStudents(projectDBModel, context);
-    }
-
-    public ProjectDBModel toDB() {
-        return new ProjectDBModel(
-          this.getProjectId(),
-          this.getTitle(),
-          this.getDescription(),
-          this.getConfid(),
-          this.hasPoster(),
-          this.getSupervisor(),
-          this.getJuryId()
-        );
-    }
-
     public int getProjectId() {
         return projectId;
     }
@@ -143,16 +117,6 @@ public class Project {
             this.students = new ArrayList<>();
         }
         this.students.add(student);
-    }
-
-    public void fillStudents(ProjectDBModel projectDB, Context context) {
-        // get the students
-        List<StudentProjectDBModel> studentsProject = Database.getInstance(context).getStudentProjectDAO().getProjectPersons(projectDB.getProjectId());
-        for (StudentProjectDBModel ppDB : studentsProject) {
-            StudentDBModel studentDB = Database.getInstance(context).getStudentDAO().getPerson(ppDB.getStudentId());
-            Student student = new Student(studentDB.getStudentId(), studentDB.getForename(), studentDB.getSurname());
-            this.addStudent(student);
-        }
     }
 
     @Override

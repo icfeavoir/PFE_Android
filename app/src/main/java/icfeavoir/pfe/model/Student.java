@@ -4,7 +4,7 @@ import android.content.Context;
 
 import icfeavoir.pfe.database.model.StudentDBModel;
 
-public class Student {
+public class Student extends Model {
     private int studentId;
     private String forename;
     private String surname;
@@ -35,15 +35,15 @@ public class Student {
         return surname;
     }
 
+    public String getFullName() {
+        return this.getForename() + " " + this.getSurname();
+    }
+
     @Override
     public String toString() {
         return "[PEOPLE] " +
                 "studentId: " + this.studentId + " | " +
                 "forename: " + this.forename + " | " +
                 "surname: " + this.surname;
-    }
-
-    public String getFullName() {
-        return this.getForename() + " " + this.getSurname();
     }
 }

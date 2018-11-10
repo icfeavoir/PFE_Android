@@ -6,7 +6,7 @@ import android.arch.persistence.room.PrimaryKey;
 import java.util.Date;
 
 @Entity
-public class JuryDBModel {
+public class JuryDBModel extends DBModel {
 
     @PrimaryKey private final int juryId;
     private final String date;

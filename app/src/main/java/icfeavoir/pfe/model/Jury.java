@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Jury {
+public class Jury extends Model {
 
     private int juryId;
     private String date;

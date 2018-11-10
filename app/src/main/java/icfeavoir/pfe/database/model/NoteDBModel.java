@@ -14,7 +14,7 @@ import android.arch.persistence.room.PrimaryKey;
                 childColumns = "projectId",
                 onDelete = ForeignKey.CASCADE),
         })
-public class NoteDBModel {
+public class NoteDBModel extends DBModel {
 
     @PrimaryKey(autoGenerate = true)
     private final int studentId;

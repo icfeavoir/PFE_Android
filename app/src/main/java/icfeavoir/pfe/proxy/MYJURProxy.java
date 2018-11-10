@@ -18,6 +18,7 @@ import icfeavoir.pfe.database.model.StudentDBModel;
 import icfeavoir.pfe.database.model.StudentProjectDBModel;
 import icfeavoir.pfe.database.model.ProjectDBModel;
 import icfeavoir.pfe.model.Jury;
+import icfeavoir.pfe.model.ModelConstructor;
 import icfeavoir.pfe.model.Student;
 import icfeavoir.pfe.model.Project;
 
@@ -55,7 +56,7 @@ public class MYJURProxy extends Proxy {
                                 .getProjectByJury(jury.getJuryId());
 
                         for (ProjectDBModel projectDB : projects) {
-                            project = new Project(projectDB, getContext());
+                            project = (Project) ModelConstructor.modelFactory(projectDB, getContext());
                             jury.addProject(project);
                         }
 
@@ -88,7 +89,7 @@ public class MYJURProxy extends Proxy {
                 // convert every Project in ProjectDB
                 for (Map.Entry<Integer, Project> entry : jury.getProjects().entrySet()) {
                     Project project = entry.getValue();
-                    projectsDB.add(project.toDB());
+                    projectsDB.add((ProjectDBModel) ModelConstructor.dbModelFactory(project));
                     for (Student p : project.getStudents()) {
                         studentProjectDBModels.add(new StudentProjectDBModel(p.getStudentId(), project.getProjectId()));
                         studentDBModels.add(new StudentDBModel(p.getStudentId(), p.getForename(), p.getSurname()));

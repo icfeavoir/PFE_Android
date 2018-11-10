@@ -1,6 +1,6 @@
 package icfeavoir.pfe.model;
 
-public class User {
+public class User extends Model {
 
     private static User instance;
 

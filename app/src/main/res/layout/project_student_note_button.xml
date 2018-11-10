@@ -5,6 +5,8 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:gravity="center"
+    android:rowCount="2"
+    android:columnCount="3"
     >
 
     <TextView
@@ -12,20 +14,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         android:layout_row="0"
         android:layout_column="0"
-        android:layout_rowWeight="40"
+        android:layout_columnWeight="60"
         />
     <TextView
         android:id="@+id/student_avg_note"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         android:layout_row="0"
-        android:layout_column="0"
-        android:layout_rowWeight="40"
+        android:layout_column="1"
+        android:layout_columnWeight="10"
         />
     <Button
         android:id="@+id/student_note_btn"
@@ -35,8 +37,8 @@
         android:text="@string/project_student_noter"
         android:background="@drawable/pretty_button"
         android:layout_row="0"
-        android:layout_column="1"
-        android:layout_rowWeight="20"
+        android:layout_column="2"
+        android:layout_columnWeight="30"
         />
 
     <View
@@ -45,7 +47,7 @@
         android:layout_marginBottom="5dp"
         android:layout_row="1"
         android:layout_column="0"
-        android:layout_columnSpan="2"
+        android:layout_columnSpan="3"
         />
 
 </GridLayout>

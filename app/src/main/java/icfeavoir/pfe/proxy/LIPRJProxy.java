@@ -15,6 +15,7 @@ import icfeavoir.pfe.database.Database;
 import icfeavoir.pfe.database.model.StudentDBModel;
 import icfeavoir.pfe.database.model.StudentProjectDBModel;
 import icfeavoir.pfe.database.model.ProjectDBModel;
+import icfeavoir.pfe.model.ModelConstructor;
 import icfeavoir.pfe.model.Student;
 import icfeavoir.pfe.model.Project;
 
@@ -49,7 +50,7 @@ public class LIPRJProxy extends Proxy {
                     List<ProjectDBModel> projects = Database.getInstance(getContext()).getProjectDAO().getAllProjects();
                     // convert ProjectDB in Project
                     for (ProjectDBModel projectDB : projects) {
-                        allProjects.add(new Project(projectDB, getContext()));
+                        allProjects.add((Project) ModelConstructor.modelFactory(projectDB, getContext()));
                     }
 
                     // display data
@@ -72,7 +73,7 @@ public class LIPRJProxy extends Proxy {
         for (Object obj : elements) {
             try {
                 project = (Project) obj;
-                projectsDB.add(project.toDB());
+                projectsDB.add((ProjectDBModel) ModelConstructor.dbModelFactory(project));
                 for (Student p : project.getStudents()) {
                     studentProjectDBModels.add(new StudentProjectDBModel(p.getStudentId(), project.getProjectId()));
                     studentDBModels.add(new StudentDBModel(p.getStudentId(), p.getForename(), p.getSurname()));

@@ -13,6 +13,8 @@ import icfeavoir.pfe.communication.NOTESCommunication;
 import icfeavoir.pfe.controller.PFEActivity;
 import icfeavoir.pfe.database.Database;
 import icfeavoir.pfe.database.model.NoteDBModel;
+import icfeavoir.pfe.model.Jury;
+import icfeavoir.pfe.model.ModelConstructor;
 import icfeavoir.pfe.model.Note;
 
 public class NOTESProxy extends Proxy {
@@ -53,7 +55,7 @@ public class NOTESProxy extends Proxy {
                     List<NoteDBModel> notesDB = Database.getInstance(getContext()).getNoteDAO().getNotesByProjectId(projectId);
                     // convert NoteDB in Note
                     for (NoteDBModel noteDB : notesDB) {
-                        notes.add(new Note(noteDB, getContext()));
+                        notes.add((Note) ModelConstructor.modelFactory(noteDB, getContext()));
                     }
                     // display data
                     sendDataToController(notes);
@@ -112,9 +114,11 @@ public class NOTESProxy extends Proxy {
 
     @Override
     void sendDataToController(Object elements) {
-        List<Note> notes = (List<Note>) elements;
-        for (Note note : notes) {
-            Log.i("NOTE", note.toString());
+        try {
+            List<Note> notes = (List<Note>) elements;
+            this.getActivity().displayData(notes);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

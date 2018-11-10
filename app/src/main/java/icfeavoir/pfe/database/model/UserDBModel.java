@@ -5,7 +5,7 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 @Entity
-public class UserDBModel {
+public class UserDBModel extends DBModel {
 
     @PrimaryKey @NonNull private final String username;
     private final String password;

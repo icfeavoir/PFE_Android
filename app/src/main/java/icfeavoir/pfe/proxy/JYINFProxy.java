@@ -13,6 +13,7 @@ import icfeavoir.pfe.communication.JYINFCommunication;
 import icfeavoir.pfe.controller.PFEActivity;
 import icfeavoir.pfe.database.Database;
 import icfeavoir.pfe.database.model.ProjectDBModel;
+import icfeavoir.pfe.model.ModelConstructor;
 import icfeavoir.pfe.model.Project;
 
 public class JYINFProxy extends Proxy {
@@ -46,7 +47,7 @@ public class JYINFProxy extends Proxy {
                     // convert ProjectDB in Project
                     Project project;
                     for (ProjectDBModel projectDB : projectsDB){
-                        project = new Project(projectDB, getContext());
+                        project = (Project) ModelConstructor.modelFactory(projectDB, getContext());
                         allProjects.add(project);
                     }
 

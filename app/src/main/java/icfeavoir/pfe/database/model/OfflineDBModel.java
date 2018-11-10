@@ -4,7 +4,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
 @Entity
-public class OfflineDBModel {
+public class OfflineDBModel extends DBModel {
     @PrimaryKey (autoGenerate = true) private int id;
     private final String query;
     private final String endpoint;

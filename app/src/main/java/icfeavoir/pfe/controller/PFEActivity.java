@@ -21,7 +21,18 @@ public abstract class PFEActivity extends AppCompatActivity implements Navigatio
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawerLayout != null && drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            // close the menu
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            // if we are in MYJUR, prev is connection (so do nothing)/
+            if (this instanceof MYJURActivity) {
+                // do nothing
+            } else {
+                super.onBackPressed();
+            }
+        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

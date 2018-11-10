@@ -75,6 +75,12 @@ public class MYJURActivity extends PFEActivity {
     public void displayData(Object data) {
         List<Jury> juries = (List<Jury>) data;
         this.myjurAdapter.setJuries(juries);
+
+        // TODO: remove this
+//        Intent i = new Intent(this, PRJActivity.class);
+//        i.putExtra("projectId", 1);
+//        startActivity(i);
+//        finish();
     }
 
     public void clickJuryCard(Jury jury) {
