@@ -1,5 +1,7 @@
 package icfeavoir.pfe.model;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,9 +19,20 @@ public class Note extends Model {
             String surname = noteObject.has("surname") ? noteObject.getString("surname") : "";
             this.student = new Student(userId, forename, surname);
             this.project = null;
-            this.note = noteObject.has("note") ? noteObject.getDouble("note") : -1.0;
+
+            try {
+                this.note = noteObject.getDouble("mynote");
+            } catch (JSONException e) {
+                this.note = -1.;
+            }
+
             this.profUsername = User.getInstance().getUsername();
-            this.avg = noteObject.has("avg") ? noteObject.getDouble("avg") : -1.0;
+
+            try {
+                this.avg = noteObject.getDouble("avgNote");
+            } catch (JSONException e) {
+                this.avg = -1.;
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

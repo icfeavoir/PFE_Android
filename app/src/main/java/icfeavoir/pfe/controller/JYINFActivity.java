@@ -3,6 +3,7 @@ package icfeavoir.pfe.controller;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -24,6 +25,7 @@ public class JYINFActivity extends PFEActivity {
     private int juryID;
 
     private LayoutInflater inflater;
+    private TextView errorText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,13 +36,26 @@ public class JYINFActivity extends PFEActivity {
 
         this.inflater = getLayoutInflater();
         this.layout = findViewById(R.id.myprojList);
+        this.errorText = findViewById(R.id.error_text);
+        this.errorText.setVisibility(View.INVISIBLE);
 
         try {
             this.juryID = getIntent().getExtras().getInt("jury_extra");
             attemptJYINF();
         } catch (Exception e) {
             e.printStackTrace();
+            this.noProjectsException();
         }
+    }
+
+    private void noProjectsException() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                errorText.setVisibility(View.VISIBLE);
+                errorText.setText("Pas de projet");
+            }
+        });
     }
 
     public void clickProjectCard(Project project) {
@@ -49,31 +64,41 @@ public class JYINFActivity extends PFEActivity {
         startActivity(intent);
     }
 
-
     @Override
     public void displayData(Object data) {
+        Log.i("tag", "projects");
         final ArrayList<Project> projects = (ArrayList<Project>) data;
-        final PFEActivity it = this;
-        for (final Project project : projects) {
-            View projectView = inflater.inflate(R.layout.project_card_layout, this.layout, false);
-
-            TextView title = projectView.findViewById(R.id.project_title);
-            title.setText(project.getTitle());
-
-            TextView desc = projectView.findViewById(R.id.project_description);
-            desc.setText(project.getDescription().substring(0, 200) + "...");
-
-            projectView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(it, PRJActivity.class);
-                    i.putExtra("projectId", project.getProjectId());
-                    it.startActivity(i);
-                }
-            });
-
-            layout.addView(projectView);
+        if (projects.size() <= 0) {
+            this.noProjectsException();
+            return;
         }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                for (final Project project : projects) {
+                    View projectView = inflater.inflate(R.layout.project_card_layout, layout, false);
+
+                    TextView title = projectView.findViewById(R.id.project_title);
+                    title.setText(project.getTitle());
+
+                    TextView desc = projectView.findViewById(R.id.project_description);
+                    if (desc.length() >= 200) {
+                        desc.setText(project.getDescription().substring(0, 200) + "...");
+                    } else {
+                        desc.setText(project.getDescription());
+                    }
+
+                    projectView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            clickProjectCard(project);
+                        }
+                    });
+
+                    layout.addView(projectView);
+                }
+            }
+        });
     }
 
     private void attemptJYINF() {
@@ -84,6 +109,7 @@ public class JYINFActivity extends PFEActivity {
             proxy.call(json);
         } catch (JSONException e) {
             e.printStackTrace();
+            this.noProjectsException();
         }
     }
 }

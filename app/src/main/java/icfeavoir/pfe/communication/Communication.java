@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.NoRouteToHostException;
 import java.net.URL;
 import java.util.Iterator;
 
@@ -126,8 +127,15 @@ public abstract class Communication extends AsyncTask<String, Void, String> {
             }
             res = sb.toString();
 
-        } catch (Exception e) {
+        } catch (NoRouteToHostException e) {
+            Log.e("ERROR", "Not connected to api");
+            // recall with local mode
+            this.proxy.callWithoutInternet(urlQuery);
+            return null;
+        }
+        catch (Exception e) {
             Log.e("QUERY", "Error with url: " + urlQuery + " | Exception: " + e.getClass());
+            return null;
         }
 
         return res;
@@ -135,13 +143,12 @@ public abstract class Communication extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String result){
-        if (this.shouldReturn) {
+        if (result != null && this.shouldReturn) {
             try {
                 JSONObject json = new JSONObject(result);
                 this.proxy.checkDataAfterInternet(json);
             } catch (JSONException e) {
                 Log.i("NON JSON RES", result);
-                Log.e("POST ASYNC", "Response is not a JSON");
             }
         }
     }

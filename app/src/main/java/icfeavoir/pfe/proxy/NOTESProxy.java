@@ -100,18 +100,20 @@ public class NOTESProxy extends Proxy {
                         note.getAvg()
                 ));
             }
+
+            // save data in DB with new Thread
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    // delete all notes of this project
+                    Database.getInstance(getContext()).getNoteDAO().deleteByProjectId(projectId);
+                    Database.getInstance(getContext()).getNoteDAO().insert(noteDBModels);
+                }
+            }).start();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // save data in DB with new Thread
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // delete all notes of this project
-                Database.getInstance(getContext()).getNoteDAO().deleteByProjectId(projectId);
-                Database.getInstance(getContext()).getNoteDAO().insert(noteDBModels);
-            }
-        }).start();
     }
 
     @Override

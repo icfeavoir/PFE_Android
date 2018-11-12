@@ -7,7 +7,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import icfeavoir.pfe.communication.Communication;
 import icfeavoir.pfe.communication.LIJURCommunication;
@@ -34,7 +37,7 @@ public abstract class Proxy {
         this.beforeCalling(json);
         if (Utils.isConnected(activity.getApplicationContext())) {
             // internet connection
-            // add token is exists
+            // add token if exists
             User user = User.getInstance();
             if (user.getToken() != null && user.getUsername() != null) {
                 try {
@@ -60,6 +63,25 @@ public abstract class Proxy {
 
     abstract void callWithInternet(JSONObject json);
     abstract void callWithoutInternet(JSONObject json);
+
+    /**
+     * Call with a query (to call in local)
+     * @param query A string with a valid query
+     */
+    public void callWithoutInternet(String query) {
+        String realQuery = query.split("\\?")[1];
+        List<String> params = Arrays.asList(realQuery.split("&"));
+
+        Map<String, String> map = new HashMap<String, String>();
+        for (String param : params) {
+            String name = param.split("=")[0];
+            String value = param.split("=")[1];
+            map.put(name, value);
+        }
+        JSONObject json = new JSONObject(map);
+        this.callWithoutInternet(json);
+    }
+
 
     void saveDataFromInternet(List<?> elements) {}
     void beforeCalling(JSONObject json) {}

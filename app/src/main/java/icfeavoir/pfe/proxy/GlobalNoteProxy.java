@@ -1,5 +1,7 @@
 package icfeavoir.pfe.proxy;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,6 +42,7 @@ public class GlobalNoteProxy extends Proxy {
                                         .getProjectDAO()
                                         .updateGlobalNote(note, projectId);
                             } else if (json.has("GET")) {
+                                Log.i("", "GET GLOBAL NOTE");
                                 Double globalNote = Database.getInstance(getContext())
                                         .getProjectDAO()
                                         .getGlobalNote(projectId);

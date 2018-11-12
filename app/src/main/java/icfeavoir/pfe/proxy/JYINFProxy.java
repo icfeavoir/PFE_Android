@@ -21,13 +21,25 @@ import icfeavoir.pfe.model.Student;
 
 public class JYINFProxy extends Proxy {
 
+    private int juryId;
+
     public JYINFProxy(PFEActivity activity) {
         super(activity);
     }
 
     @Override
+    void beforeCalling(JSONObject json) {
+        if (json.has("jury")) {
+            try {
+                this.juryId = json.getInt("jury");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
     void callWithInternet(JSONObject json) {
-        Log.i("coolcool",json.toString());
         // call the communication class and give "this" to enable the callback
         JYINFCommunication com = new JYINFCommunication(this.getContext(), this);
         com.call(json);
@@ -53,7 +65,6 @@ public class JYINFProxy extends Proxy {
                         project = (Project) ModelConstructor.modelFactory(projectDB, getContext());
                         allProjects.add(project);
                     }
-
                     // display data
                     sendDataToController(allProjects);
                 } catch (Exception e){
@@ -68,7 +79,6 @@ public class JYINFProxy extends Proxy {
         final List<ProjectDBModel> projectsDB = new ArrayList<>();
         final List<StudentProjectDBModel> studentProjectDBModels = new ArrayList<>();
         final List<StudentDBModel> studentDBModels = new ArrayList<>();
-
 
         // save data in DB with new Thread
         new Thread(new Runnable() {
@@ -97,11 +107,9 @@ public class JYINFProxy extends Proxy {
             for (ProjectDBModel projectDB : projectsDB) {
                 Database.getInstance(getContext()).getProjectDAO().delete(projectDB.getProjectId());
                 Database.getInstance(getContext()).getProjectDAO().insert(projectDB);
-
-                // PersonProject : delete and resave to have the last values
-                Database.getInstance(getContext()).getStudentProjectDAO().delete(projectDB.getProjectId());
             }
-            // add all at once
+
+            // add all at once (link between students and projects)
             Database.getInstance(getContext()).getStudentProjectDAO().insert(studentProjectDBModels);
             }
         }).start();
@@ -109,13 +117,14 @@ public class JYINFProxy extends Proxy {
 
     @Override
     public void returnDataAfterInternet(JSONObject json) {
-        Log.i("salut",json.toString());
         ArrayList<Project> alProject = new ArrayList<>();
         Project project;
         try {
             JSONArray projectsArr = json.has("projects") ? json.getJSONArray("projects") : new JSONArray();
             for (int i = 0; i < projectsArr.length(); i++) {
                 JSONObject projectObject = projectsArr.getJSONObject(i);
+                // save juryId because not in api...
+                projectObject.put("jury", juryId);
                 project = new Project(projectObject);
                 // add project to the list
                 alProject.add(project);

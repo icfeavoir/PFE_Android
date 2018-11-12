@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import icfeavoir.pfe.R;
+import icfeavoir.pfe.proxy.LOGOUTProxy;
 
 public abstract class PFEActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -42,9 +43,11 @@ public abstract class PFEActivity extends AppCompatActivity implements Navigatio
         if (id == R.id.menu_myjur) {
             Intent intent = new Intent(this, MYJURActivity.class);
             startActivity(intent);
-            finish();
         } else if (id == R.id.menu_lijur) {
 
+        } else if (id == R.id.menu_logout) {
+            LOGOUTProxy proxy = new LOGOUTProxy(this);
+            proxy.call();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

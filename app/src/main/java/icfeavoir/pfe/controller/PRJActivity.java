@@ -8,6 +8,7 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -79,7 +80,6 @@ public class PRJActivity extends PFEActivity {
 
         try {
             this.projectId = getIntent().getExtras().getInt("projectId");
-            Log.i("prj", this.projectId +" ");
             this.getProjectInfo(this.projectId);
         } catch (NullPointerException e) {
             this.noProjectException();
@@ -120,7 +120,8 @@ public class PRJActivity extends PFEActivity {
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
         builder.setView(input);
 
-        if (globalNote < 0) {
+        Log.i("POPUP", "gn " + globalNote);
+        if (globalNote >= 0) {
             input.setText(globalNote + "");
         }
 
@@ -161,7 +162,7 @@ public class PRJActivity extends PFEActivity {
         input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         builder.setView(input);
 
-        if (notes.containsKey(student.getStudentId())) {
+        if (notes.containsKey(student.getStudentId()) && notes.get(student.getStudentId()) >= 0) {
             input.setText(notes.get(student.getStudentId()) + "");
         }
 
@@ -212,13 +213,13 @@ public class PRJActivity extends PFEActivity {
         bigPoster.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("POSTER", "BIG POSTER BTN");
                 Intent i = new Intent(it, POSTRActivity.class);
                 i.putExtra("projectId", projectId);
                 startActivity(i);
             }
         });
         bigPoster.setBackground(getDrawable(R.drawable.pretty_button));
+        bigPoster.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         bigPoster.setTextColor(getResources().getColor(R.color.darkBlue));
         bigPoster.setText(R.string.big_poster_project_btn);
         view.addView(bigPoster);
@@ -265,11 +266,9 @@ public class PRJActivity extends PFEActivity {
             studentName.setText(student.getFullName());
 
             TextView avgNote = studentView.findViewById(R.id.student_avg_note);
-            if (this.avgNotes.containsKey(student.getStudentId()) && this.avgNotes.get(student.getStudentId()) != -1) {
+            if (this.avgNotes.containsKey(student.getStudentId()) && this.avgNotes.get(student.getStudentId()) >= 0) {
                 // at least a note
                 avgNote.setText(String.format(getResources().getString(R.string.project_avg_note), this.avgNotes.get(student.getStudentId()).toString()));
-            } else {
-                avgNote.setText(R.string.project_student_no_note);
             }
 
             Button noter = studentView.findViewById(R.id.student_note_btn);
@@ -326,7 +325,7 @@ public class PRJActivity extends PFEActivity {
         try {
             globalNoteJson.put("proj", projectId);
             globalNoteJson.put("GET", true);
-            proxy.call(globalNoteJson);
+            globalNoteProxy.call(globalNoteJson);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -337,41 +336,16 @@ public class PRJActivity extends PFEActivity {
         try {
             posterCommentJson.put("proj", projectId);
             posterCommentJson.put("GET", true);
-            proxy.call(posterCommentJson);
+            posterCommentProxy.call(posterCommentJson);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
     private void setProjectNotes(final List<Note> notes) {
-        // TODO: utiliser note.avg maintenant !
-        Map<Integer, List<Double>> studentsToNotes = new HashMap<>();
         for (Note note : notes) {
-            if (note.getProfUsername().equals(User.getInstance().getUsername())) {
-                // this prof note
-                this.notes.put(note.getStudent().getStudentId(), note.getNote());
-            }
-            if (studentsToNotes.containsKey(note.getStudent().getStudentId())) {
-                // we add a note in this list
-                studentsToNotes.get(note.getStudent().getStudentId()).add(note.getNote());
-            } else {
-                studentsToNotes.put(note.getStudent().getStudentId(), new ArrayList<Double>());
-                studentsToNotes.get(note.getStudent().getStudentId()).add(note.getNote());
-            }
-        }
-
-        for (Map.Entry<Integer, List<Double>> entry : studentsToNotes.entrySet()) {
-            int studentId = entry.getKey();
-            List<Double> userNotes = entry.getValue();
-            Double avg = -1.;
-            Double sum = 0.;
-            for (Double note : userNotes ) {
-                sum += note;
-            }
-            if (userNotes.size() > 0) {
-                avg = sum / userNotes.size();
-            }
-            this.avgNotes.put(studentId, avg);
+            this.notes.put(note.getStudent().getStudentId(), note.getNote());
+            this.avgNotes.put(note.getStudent().getStudentId(), note.getAvg());
         }
 
         // we add students after we get project infos + notes
@@ -402,7 +376,6 @@ public class PRJActivity extends PFEActivity {
             } catch (Exception e) {
 
             }
-            this.globalNote = (Double) data;
         } else {
             this.noProjectException();
         }

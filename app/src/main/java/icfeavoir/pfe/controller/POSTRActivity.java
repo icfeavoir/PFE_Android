@@ -3,6 +3,7 @@ package icfeavoir.pfe.controller;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -47,8 +48,13 @@ public class POSTRActivity extends PFEActivity {
             // no image or no connection
             Toast.makeText(this, "Impossible de charger l'image", Toast.LENGTH_LONG).show();
         } else if (data instanceof Drawable) {
-            Drawable drawable = (Drawable) data;
-            this.imageView.setImageDrawable(drawable);
+            final Drawable drawable = (Drawable) data;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    imageView.setImageDrawable(drawable);
+                }
+            });
         }
     }
 }
