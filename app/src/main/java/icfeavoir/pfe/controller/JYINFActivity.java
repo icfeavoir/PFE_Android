@@ -2,17 +2,11 @@ package icfeavoir.pfe.controller;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,42 +14,33 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import icfeavoir.pfe.R;
-import icfeavoir.pfe.adapters.JYINFAdapter;
 import icfeavoir.pfe.model.Project;
 import icfeavoir.pfe.proxy.JYINFProxy;
 
 public class JYINFActivity extends PFEActivity {
 
     public static final String PROJECT_EXTRA = "project_extra";
-
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
-
-    private JYINFAdapter jyinfAdapter;
-
+    private LinearLayout layout;
     private int juryID;
+
+    private LayoutInflater inflater;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_jyinf);
-        mRecyclerView = (RecyclerView) findViewById(R.id.jyinfList);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        mRecyclerView.setHasFixedSize(true);
+        this.inflater = getLayoutInflater();
+        this.layout = findViewById(R.id.myprojList);
 
-        // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        this.jyinfAdapter = new JYINFAdapter(this);
-        mRecyclerView.setAdapter(this.jyinfAdapter);
-
-        this.juryID = getIntent().getExtras().getInt("jury_extra");
-        attemptJYINF();
+        try {
+            this.juryID = getIntent().getExtras().getInt("jury_extra");
+            attemptJYINF();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void clickProjectCard(Project project) {
@@ -67,9 +52,28 @@ public class JYINFActivity extends PFEActivity {
 
     @Override
     public void displayData(Object data) {
-        ArrayList<Project> projects = (ArrayList<Project>) data;
-        Log.i("tata", "" + projects.size());
-        this.jyinfAdapter.setProjects(projects);
+        final ArrayList<Project> projects = (ArrayList<Project>) data;
+        final PFEActivity it = this;
+        for (final Project project : projects) {
+            View projectView = inflater.inflate(R.layout.project_card_layout, this.layout, false);
+
+            TextView title = projectView.findViewById(R.id.project_title);
+            title.setText(project.getTitle());
+
+            TextView desc = projectView.findViewById(R.id.project_description);
+            desc.setText(project.getDescription().substring(0, 200) + "...");
+
+            projectView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(it, PRJActivity.class);
+                    i.putExtra("projectId", project.getProjectId());
+                    it.startActivity(i);
+                }
+            });
+
+            layout.addView(projectView);
+        }
     }
 
     private void attemptJYINF() {

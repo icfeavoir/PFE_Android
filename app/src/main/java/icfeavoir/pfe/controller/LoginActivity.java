@@ -93,17 +93,17 @@ public class LoginActivity extends PFEActivity implements LoaderCallbacks<Cursor
                 }
 //                 TODO REMOVE
 //                FAKE CONNECT WITH INTERNET
-//                else {
-//                    LOGONProxy proxy = new LOGONProxy(it);
-//                    JSONObject json = new JSONObject();
-//                    try {
-//                        json.put("user", "clavrmic");
-//                        json.put("pass", "4hH9sUFOi2gx");
-//                        proxy.call(json);
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
+                else {
+                    LOGONProxy proxy = new LOGONProxy(it);
+                    JSONObject json = new JSONObject();
+                    try {
+                        json.put("user", "clavrmic");
+                        json.put("pass", "4hH9sUFOi2gx");
+                        proxy.call(json);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }).start();
 

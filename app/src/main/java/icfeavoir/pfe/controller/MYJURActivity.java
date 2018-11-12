@@ -2,49 +2,35 @@ package icfeavoir.pfe.controller;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.List;
 
 import icfeavoir.pfe.R;
-import icfeavoir.pfe.adapters.MYJURAdapter;
 import icfeavoir.pfe.model.Jury;
-import icfeavoir.pfe.notification.NotificationPublisher;
 import icfeavoir.pfe.proxy.MYJURProxy;
-import icfeavoir.pfe.utils.Utils;
 
 public class MYJURActivity extends PFEActivity {
 
     public static final String JURY_EXTRA = "jury_extra";
 
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private LinearLayout layout;
 
-    private MYJURAdapter myjurAdapter;
+    private LayoutInflater inflater;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        mRecyclerView = (RecyclerView) findViewById(R.id.myjurList);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        mRecyclerView.setHasFixedSize(true);
-
-        // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        this.myjurAdapter = new MYJURAdapter(this);
-        mRecyclerView.setAdapter(this.myjurAdapter);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -54,21 +40,33 @@ public class MYJURActivity extends PFEActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        attemptMYJUR();
+        this.layout = findViewById(R.id.myjurList);
+        this.inflater = getLayoutInflater();
 
-        Utils.scheduleNotification(this, Utils.getNotification(this, "Jury 1", "Votre jury commence dans 15 minutes !"), 1000, 1);
+        attemptMYJUR();
     }
 
     @Override
     public void displayData(Object data) {
         List<Jury> juries = (List<Jury>) data;
-        this.myjurAdapter.setJuries(juries);
+        for (final Jury jury : juries) {
+            View juryView = inflater.inflate(R.layout.jury_card_layout, this.layout, false);
 
-        // TODO: remove this
-//        Intent i = new Intent(this, PRJActivity.class);
-//        i.putExtra("projectId", 1);
-//        startActivity(i);
-//        finish();
+            TextView id = juryView.findViewById(R.id.jury_id_title);
+            id.setText("Jury n°" + jury.getJuryId());
+
+            TextView date = juryView.findViewById(R.id.jury_date);
+            date.setText(jury.getDate());
+
+            juryView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    clickJuryCard(jury);
+                }
+            });
+
+            layout.addView(juryView);
+        }
     }
 
     public void clickJuryCard(Jury jury) {

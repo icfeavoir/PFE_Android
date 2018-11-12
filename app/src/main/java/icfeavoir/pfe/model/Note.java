@@ -1,35 +1,36 @@
 package icfeavoir.pfe.model;
 
-import android.content.Context;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import icfeavoir.pfe.database.Database;
-import icfeavoir.pfe.database.model.NoteDBModel;
-import icfeavoir.pfe.database.model.ProjectDBModel;
-import icfeavoir.pfe.database.model.StudentDBModel;
 
 public class Note extends Model {
     private Student student;
     private Project project;
     private String profUsername;
-    private int note;
+    private Double note;
+    private Double avg;
 
     public Note(JSONObject noteObject) {
         try {
-            this.note = noteObject.has("note") ? noteObject.getInt("note") : -1;
+            int userId = noteObject.has("userId") ? noteObject.getInt("userId") : -1;
+            String forename = noteObject.has("forename") ? noteObject.getString("forename") : "";
+            String surname = noteObject.has("surname") ? noteObject.getString("surname") : "";
+            this.student = new Student(userId, forename, surname);
+            this.project = null;
+            this.note = noteObject.has("note") ? noteObject.getDouble("note") : -1.0;
             this.profUsername = User.getInstance().getUsername();
+            this.avg = noteObject.has("avg") ? noteObject.getDouble("avg") : -1.0;
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public Note(Student student, Project project, String profUsername, int note) {
+    public Note(Student student, Project project, String profUsername, Double note, Double avg) {
         this.student = student;
         this.project = project;
         this.profUsername = profUsername;
         this.note = note;
+        this.avg = avg;
     }
 
     public Student getStudent() {
@@ -44,7 +45,15 @@ public class Note extends Model {
         return profUsername;
     }
 
-    public int getNote() {
+    public Double getNote() {
         return note;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public Double getAvg() {
+        return avg;
     }
 }

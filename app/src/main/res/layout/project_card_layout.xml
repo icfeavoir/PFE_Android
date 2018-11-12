@@ -10,24 +10,20 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@color/lightBlue">
-        >
         <TextView
-            android:id="@+id/project_id"
+            android:id="@+id/project_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="2dp"
-            android:maxLines="2"
-            android:minLines="2"
-            android:textColor="@color/black"
-            android:textSize="40sp" />
+            android:padding="5dp"
+            android:textColor="@color/white"
+            android:textSize="30sp" />
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/project_description"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:padding="2dp"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
 
     </LinearLayout>
 

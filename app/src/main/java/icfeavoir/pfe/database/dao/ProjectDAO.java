@@ -24,6 +24,16 @@ public interface ProjectDAO {
     @Query("SELECT * FROM StudentProjectDBModel where projectId=:projectId")
     List<Student> getStudents(int projectId);
 
+    @Query("UPDATE ProjectDBModel SET globalNote=:globalNote WHERE projectId=:projectId")
+    void updateGlobalNote(Double globalNote, int projectId);
+    @Query("SELECT globalNote FROM ProjectDBModel WHERE projectId=:projectId")
+    Double getGlobalNote(int projectId);
+
+    @Query("UPDATE ProjectDBModel SET comment=:comment WHERE projectId=:projectId")
+    void updatePosterComment(String comment, int projectId);
+    @Query("SELECT comment FROM ProjectDBModel WHERE projectId=:projectId")
+    String getPosterComment(int projectId);
+
     @Insert
     void insert(List<ProjectDBModel> projects);
 

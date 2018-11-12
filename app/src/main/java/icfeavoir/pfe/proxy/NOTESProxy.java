@@ -13,9 +13,9 @@ import icfeavoir.pfe.communication.NOTESCommunication;
 import icfeavoir.pfe.controller.PFEActivity;
 import icfeavoir.pfe.database.Database;
 import icfeavoir.pfe.database.model.NoteDBModel;
-import icfeavoir.pfe.model.Jury;
 import icfeavoir.pfe.model.ModelConstructor;
 import icfeavoir.pfe.model.Note;
+import icfeavoir.pfe.model.Project;
 
 public class NOTESProxy extends Proxy {
 
@@ -76,6 +76,7 @@ public class NOTESProxy extends Proxy {
                 JSONObject noteObj = notesArr.getJSONObject(i);
                 note = new Note(noteObj);
                 // add project to the list
+                note.setProject(new Project(projectId));
                 notes.add(note);
             }
         } catch (JSONException e) {
@@ -95,7 +96,8 @@ public class NOTESProxy extends Proxy {
                         note.getStudent().getStudentId(),
                         note.getProject().getProjectId(),
                         note.getProfUsername(),
-                        note.getNote()
+                        note.getNote(),
+                        note.getAvg()
                 ));
             }
         } catch (Exception e) {

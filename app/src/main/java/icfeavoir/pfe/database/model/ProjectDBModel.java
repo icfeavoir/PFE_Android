@@ -13,9 +13,10 @@ public class ProjectDBModel extends DBModel {
     private final boolean poster;
     private final String supervisor;
     private final int juryId;
+    private final Double globalNote;
+    private final String comment;
 
-
-    public ProjectDBModel(int projectId, String title, String description, int confid, boolean poster, String supervisor, int juryId) {
+    public ProjectDBModel(int projectId, String title, String description, int confid, boolean poster, String supervisor, int juryId, Double globalNote, String comment) {
         this.projectId = projectId;
         this.title = title;
         this.description = description;
@@ -23,6 +24,8 @@ public class ProjectDBModel extends DBModel {
         this.poster = poster;
         this.supervisor = supervisor;
         this.juryId = juryId;
+        this.globalNote = globalNote;
+        this.comment = comment;
     }
 
     public int getProjectId() {
@@ -51,5 +54,13 @@ public class ProjectDBModel extends DBModel {
 
     public String getSupervisor() {
         return supervisor;
+    }
+
+    public Double getGlobalNote() {
+        return globalNote;
+    }
+
+    public String getComment() {
+        return comment;
     }
 }

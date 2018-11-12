@@ -1,6 +1,7 @@
 package icfeavoir.pfe.model;
 
 import android.content.Context;
+import android.provider.ContactsContract;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,8 +48,9 @@ public class ModelConstructor  {
                     .getProject(noteDBModel.getProjectId());
             Project project = (Project) modelFactory(projectDB, context);
             String profUsername = noteDBModel.getProfUsername();
-            int note = noteDBModel.getNote();
-            return new Note(student, project, profUsername, note);
+            Double note = noteDBModel.getNote();
+            Double avg = noteDBModel.getAvg();
+            return new Note(student, project, profUsername, note, avg);
         }
         else {
             return null;
@@ -56,18 +58,27 @@ public class ModelConstructor  {
 
     }
 
-    public static DBModel dbModelFactory(Model model) {
+    public static DBModel dbModelFactory(Model model, Context context) {
         if (model instanceof Project) {
-            Project project = (Project) model;
+            final Project project = (Project) model;
+            // check is this project already exists
+            Double globalNote = Database.getInstance(context)
+                    .getProjectDAO()
+                    .getGlobalNote(project.getProjectId());
+            String comment = Database.getInstance(context)
+                    .getProjectDAO()
+                    .getPosterComment(project.getProjectId());
             return new ProjectDBModel(
-                project.getProjectId(),
-                project.getTitle(),
-                project.getDescription(),
-                project.getConfid(),
-                project.hasPoster(),
-                project.getSupervisor(),
-                project.getJuryId()
-            );
+                    project.getProjectId(),
+                    project.getTitle(),
+                    project.getDescription(),
+                    project.getConfid(),
+                    project.hasPoster(),
+                    project.getSupervisor(),
+                    project.getJuryId(),
+                    globalNote,
+                    comment);
+
         } else {
             return null;
         }

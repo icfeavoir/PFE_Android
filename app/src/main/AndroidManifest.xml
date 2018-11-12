@@ -30,8 +30,10 @@
             android:label="@string/title_activity_jyinf"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".controller.PRJActivity" />
+
         <receiver android:name=".notification.NotificationPublisher" />
 
+        <activity android:name=".controller.POSTRActivity"></activity>
     </application>
 
 </manifest>

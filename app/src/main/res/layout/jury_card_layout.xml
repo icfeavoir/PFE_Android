@@ -10,9 +10,8 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@color/lightBlue">
-        >
         <TextView
-            android:id="@+id/jury_id"
+            android:id="@+id/jury_id_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="2dp"
@@ -21,7 +20,7 @@
             android:textColor="@color/white"
             android:textSize="40sp" />
         <TextView
-            android:id="@+id/date"
+            android:id="@+id/jury_date"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"

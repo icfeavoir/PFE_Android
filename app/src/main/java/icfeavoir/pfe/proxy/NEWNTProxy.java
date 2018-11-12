@@ -1,7 +1,5 @@
 package icfeavoir.pfe.proxy;
 
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,7 +41,7 @@ public class NEWNTProxy extends Proxy {
                 // updating local DB
                 if (json.has("proj") && json.has("student") && json.has("note")) {
                     try {
-                        int note = json.getInt("note");
+                        Double note = json.getDouble("note");
                         int projectId = json.getInt("proj");
                         int studentId = json.getInt("student");
                         String profUsername = User.getInstance().getUsername();
@@ -53,13 +51,11 @@ public class NEWNTProxy extends Proxy {
                                 .getNoteByStudentByProjectIdByProfUsername(studentId, projectId, profUsername);
                         if (noteDB == null) {
                             // save
-                            noteDB = new NoteDBModel(studentId, projectId, profUsername, note);
+                            noteDB = new NoteDBModel(studentId, projectId, profUsername, note, -1.);
                             Database.getInstance(getContext()).getNoteDAO().insert(noteDB);
-                            Log.i("", "First insert");
                         } else {
                             // update
                             Database.getInstance(getContext()).getNoteDAO().updateNote(note, projectId, studentId, profUsername);
-                            Log.i("", "update");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

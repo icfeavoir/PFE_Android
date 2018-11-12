@@ -80,20 +80,22 @@ public abstract class Communication extends AsyncTask<String, Void, String> {
         }
     }
 
-    public void call() {
-        this.call(new JSONObject());
+    public String call() {
+        return this.call(new JSONObject());
     }
 
-    public void call(JSONObject json) {
-        this.call(json, true);
+    public String call(JSONObject json) {
+        return this.call(json, true);
     }
 
-    public void call(JSONObject json, boolean shouldReturn) {
+    public String call(JSONObject json, boolean shouldReturn) {
         this.shouldReturn = shouldReturn;
         if (this.getQuery() != null) {
             request(this.getQuery(), json, this.getProxy());
+            return this.getQuery();
         } else {
             Log.e("COMMUNICATION", "NO QUERY");
+            return "";
         }
     }
 

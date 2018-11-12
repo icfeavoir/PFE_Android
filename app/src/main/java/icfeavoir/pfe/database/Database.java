@@ -27,7 +27,7 @@ import icfeavoir.pfe.database.model.UserDBModel;
         OfflineDBModel.class,
         StudentDBModel.class,
         StudentProjectDBModel.class,
-}, version = 12)
+}, version = 14)
 public abstract class Database extends RoomDatabase {
 
     private static final String DB_NAME = "database.db";

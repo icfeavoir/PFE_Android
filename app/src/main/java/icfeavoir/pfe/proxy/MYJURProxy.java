@@ -78,57 +78,58 @@ public class MYJURProxy extends Proxy {
     }
 
     @Override
-    public void saveDataFromInternet(List<?> elements) {
-        Jury jury;
+    public void saveDataFromInternet(final List<?> elements) {
         final List<JuryDBModel> juriesDB = new ArrayList<>();
         final List<ProjectDBModel> projectsDB = new ArrayList<>();
         final List<StudentProjectDBModel> studentProjectDBModels = new ArrayList<>();
         final List<StudentDBModel> studentDBModels = new ArrayList<>();
 
-        // convert every Jury in JuryDB
-        for (Object obj : elements) {
-            try {
-                jury = (Jury) obj;
-                juriesDB.add(new JuryDBModel(jury.getJuryId(), jury.getDate()));
-
-                // convert every Project in ProjectDB
-                for (Map.Entry<Integer, Project> entry : jury.getProjects().entrySet()) {
-                    Project project = entry.getValue();
-                    projectsDB.add((ProjectDBModel) ModelConstructor.dbModelFactory(project));
-                    for (Student p : project.getStudents()) {
-                        studentProjectDBModels.add(new StudentProjectDBModel(p.getStudentId(), project.getProjectId()));
-                        studentDBModels.add(new StudentDBModel(p.getStudentId(), p.getForename(), p.getSurname()));
-                    }
-                }
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-
         // save data in DB with new Thread
         new Thread(new Runnable() {
             @Override
             public void run() {
-                // delete and resave to have the last values
-                for (JuryDBModel jury : juriesDB) {
-                    Database.getInstance(getContext()).getJuryDAO().delete(jury.getJuryId());
-                    Database.getInstance(getContext()).getJuryDAO().insert(jury);
-                }
-                // the persons
-                for (StudentDBModel person : studentDBModels) {
-                    Log.i("", "including : " + person.getForename() + " " + person.getSurname()+ " -- " + person.getStudentId());
-                    Database.getInstance(getContext()).getStudentDAO().delete(person.getStudentId());
-                    Database.getInstance(getContext()).getStudentDAO().insert(person);
-                }
-                // the projects
-                for (ProjectDBModel project : projectsDB) {
-                    Database.getInstance(getContext()).getProjectDAO().delete(project.getProjectId());
-                    Database.getInstance(getContext()).getProjectDAO().insert(project);
+            Jury jury;
 
-                    // PersonProject : delete and resave to have the last values
-                    Database.getInstance(getContext()).getStudentProjectDAO().delete(project.getProjectId());
-                    Database.getInstance(getContext()).getStudentProjectDAO().insert(studentProjectDBModels);
+            // convert every Jury in JuryDB
+            for (Object obj : elements) {
+                try {
+                    jury = (Jury) obj;
+                    juriesDB.add(new JuryDBModel(jury.getJuryId(), jury.getDate()));
+
+                    // convert every Project in ProjectDB
+                    for (Map.Entry<Integer, Project> entry : jury.getProjects().entrySet()) {
+                        Project project = entry.getValue();
+                        projectsDB.add((ProjectDBModel) ModelConstructor.dbModelFactory(project, getContext()));
+                        for (Student p : project.getStudents()) {
+                            studentProjectDBModels.add(new StudentProjectDBModel(p.getStudentId(), project.getProjectId()));
+                            studentDBModels.add(new StudentDBModel(p.getStudentId(), p.getForename(), p.getSurname()));
+                        }
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
                 }
+            }
+
+            // delete and resave to have the last values
+            for (JuryDBModel juryDB : juriesDB) {
+                Database.getInstance(getContext()).getJuryDAO().delete(juryDB.getJuryId());
+                Database.getInstance(getContext()).getJuryDAO().insert(juryDB);
+            }
+            // the persons
+            for (StudentDBModel person : studentDBModels) {
+                Log.i("", "including : " + person.getForename() + " " + person.getSurname()+ " -- " + person.getStudentId());
+                Database.getInstance(getContext()).getStudentDAO().delete(person.getStudentId());
+                Database.getInstance(getContext()).getStudentDAO().insert(person);
+            }
+            // the projects
+            for (ProjectDBModel project : projectsDB) {
+                Database.getInstance(getContext()).getProjectDAO().delete(project.getProjectId());
+                Database.getInstance(getContext()).getProjectDAO().insert(project);
+
+                // PersonProject : delete and resave to have the last values
+                Database.getInstance(getContext()).getStudentProjectDAO().delete(project.getProjectId());
+                Database.getInstance(getContext()).getStudentProjectDAO().insert(studentProjectDBModels);
+            }
             }
         }).start();
     }
@@ -138,7 +139,6 @@ public class MYJURProxy extends Proxy {
      */
     @Override
     public void returnDataAfterInternet(JSONObject json) {
-        Log.i("", json.toString());
         ArrayList<Jury> alJuries = new ArrayList<>();
         Jury jury;
         try {
@@ -191,10 +191,6 @@ public class MYJURProxy extends Proxy {
     void sendDataToController(Object elements) {
         try {
             List<Jury> juries = (List<Jury>) elements;
-
-            // TODO: remove this line
-            this.saveJuryNotification(juries);
-
             this.getActivity().displayData(juries);
         } catch (Exception e) {
             e.printStackTrace();

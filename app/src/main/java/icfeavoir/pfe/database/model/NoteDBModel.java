@@ -20,13 +20,15 @@ public class NoteDBModel extends DBModel {
     private final int studentId;
     private final int projectId;
     private final String profUsername;
-    private final int note;
+    private final Double note;
+    private final Double avg;
 
-    public NoteDBModel(int studentId, int projectId, String profUsername, int note) {
+    public NoteDBModel(int studentId, int projectId, String profUsername, Double note, Double avg) {
         this.studentId = studentId;
         this.projectId = projectId;
         this.profUsername = profUsername;
         this.note = note;
+        this.avg = avg;
     }
 
     public int getProjectId() {
@@ -37,11 +39,15 @@ public class NoteDBModel extends DBModel {
         return studentId;
     }
 
-    public int getNote() {
+    public Double getNote() {
         return note;
     }
 
     public String getProfUsername() {
         return profUsername;
+    }
+
+    public Double getAvg() {
+        return avg;
     }
 }

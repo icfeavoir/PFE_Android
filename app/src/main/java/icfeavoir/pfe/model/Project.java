@@ -68,6 +68,10 @@ public class Project extends Model {
         this.students = students;
     }
 
+    public Project(int projectId) {
+        this(projectId, "", "", 0, false, "", 0, new ArrayList<Student>());
+    }
+
     public int getProjectId() {
         return projectId;
     }
