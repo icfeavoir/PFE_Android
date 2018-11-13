@@ -47,6 +47,9 @@ public abstract class Proxy {
                 }
             }
             this.callWithInternet(json);
+
+            // we also send unsent data
+            Utils.sendOfflineData(activity);
         } else {
             // no internet connection
             this.callWithoutInternet(json);

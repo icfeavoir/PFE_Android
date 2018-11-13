@@ -1,20 +1,20 @@
 package icfeavoir.pfe.controller;
 
-import android.graphics.drawable.Drawable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Callback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.InputStream;
-import java.net.URL;
-
 import icfeavoir.pfe.R;
 import icfeavoir.pfe.proxy.POSTRProxy;
+import icfeavoir.pfe.utils.PicassoTrustAll;
 
 public class POSTRActivity extends PFEActivity {
 
@@ -44,15 +44,30 @@ public class POSTRActivity extends PFEActivity {
      */
     @Override
     public void displayData(Object data) {
+        final TextView error = findViewById(R.id.poster_error);
         if (data == null) {
             // no image or no connection
-            Toast.makeText(this, "Impossible de charger l'image", Toast.LENGTH_LONG).show();
-        } else if (data instanceof Drawable) {
-            final Drawable drawable = (Drawable) data;
+            error.setText("Impossible de charger l'image");
+        } else if (data instanceof String) {
+            final String url = (String) data;
+            final PFEActivity it = this;
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    imageView.setImageDrawable(drawable);
+                    PicassoTrustAll.getInstance(it.getApplicationContext())
+                            .load(url)
+                            .into(imageView, new Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    error.setVisibility(View.INVISIBLE);
+                                    error.setHeight(0);
+                                }
+
+                                @Override
+                                public void onError() {
+                                    error.setText("Une erreur est survenue.");
+                                }
+                            });
                 }
             });
         }

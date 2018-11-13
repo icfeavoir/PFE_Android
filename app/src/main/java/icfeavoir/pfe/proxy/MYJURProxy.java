@@ -117,7 +117,6 @@ public class MYJURProxy extends Proxy {
             }
             // the persons
             for (StudentDBModel person : studentDBModels) {
-                Log.i("", "including : " + person.getForename() + " " + person.getSurname()+ " -- " + person.getStudentId());
                 Database.getInstance(getContext()).getStudentDAO().delete(person.getStudentId());
                 Database.getInstance(getContext()).getStudentDAO().insert(person);
             }

@@ -1,18 +1,11 @@
 package icfeavoir.pfe.model;
 
-import android.content.Context;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import icfeavoir.pfe.database.Database;
-import icfeavoir.pfe.database.model.StudentDBModel;
-import icfeavoir.pfe.database.model.StudentProjectDBModel;
-import icfeavoir.pfe.database.model.ProjectDBModel;
 
 public class Project extends Model {
 

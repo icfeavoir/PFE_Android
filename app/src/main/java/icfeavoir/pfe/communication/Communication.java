@@ -16,6 +16,7 @@ import java.util.Iterator;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import icfeavoir.pfe.proxy.POSTRProxy;
 import icfeavoir.pfe.proxy.Proxy;
 
 public abstract class Communication extends AsyncTask<String, Void, String> {
@@ -57,7 +58,7 @@ public abstract class Communication extends AsyncTask<String, Void, String> {
         this.query = query;
     }
 
-    private void request(String endpoint, JSONObject data, final Proxy callbackProxy) {
+    private String request(String endpoint, JSONObject data, final Proxy callbackProxy) {
         StringBuilder url = new StringBuilder(URL);
         url.append("q=").append(endpoint);
 
@@ -79,6 +80,7 @@ public abstract class Communication extends AsyncTask<String, Void, String> {
         } catch (Exception e ){
             e.printStackTrace();
         }
+        return url.toString();
     }
 
     public String call() {
@@ -92,8 +94,7 @@ public abstract class Communication extends AsyncTask<String, Void, String> {
     public String call(JSONObject json, boolean shouldReturn) {
         this.shouldReturn = shouldReturn;
         if (this.getQuery() != null) {
-            request(this.getQuery(), json, this.getProxy());
-            return this.getQuery();
+            return request(this.getQuery(), json, this.getProxy());
         } else {
             Log.e("COMMUNICATION", "NO QUERY");
             return "";
@@ -142,13 +143,18 @@ public abstract class Communication extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected void onPostExecute(String result){
-        if (result != null && this.shouldReturn) {
+    protected void onPostExecute(String result) {
+        if (result == null) {
+            return;
+        }
+
+        if (this.shouldReturn) {
             try {
                 JSONObject json = new JSONObject(result);
                 this.proxy.checkDataAfterInternet(json);
             } catch (JSONException e) {
                 Log.i("NON JSON RES", result);
+                Log.e("RECEIVED", result);
             }
         }
     }

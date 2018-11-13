@@ -1,8 +1,6 @@
 package icfeavoir.pfe.model;
 
 import android.content.Context;
-import android.provider.ContactsContract;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;

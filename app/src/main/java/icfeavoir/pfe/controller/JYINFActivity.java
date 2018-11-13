@@ -37,7 +37,9 @@ public class JYINFActivity extends PFEActivity {
         this.inflater = getLayoutInflater();
         this.layout = findViewById(R.id.myprojList);
         this.errorText = findViewById(R.id.error_text);
+
         this.errorText.setVisibility(View.INVISIBLE);
+        this.errorText.setHeight(0);
 
         try {
             this.juryID = getIntent().getExtras().getInt("jury_extra");
@@ -53,6 +55,7 @@ public class JYINFActivity extends PFEActivity {
             @Override
             public void run() {
                 errorText.setVisibility(View.VISIBLE);
+                errorText.setHeight(20);
                 errorText.setText("Pas de projet");
             }
         });
@@ -66,7 +69,6 @@ public class JYINFActivity extends PFEActivity {
 
     @Override
     public void displayData(Object data) {
-        Log.i("tag", "projects");
         final ArrayList<Project> projects = (ArrayList<Project>) data;
         if (projects.size() <= 0) {
             this.noProjectsException();
@@ -82,7 +84,7 @@ public class JYINFActivity extends PFEActivity {
                     title.setText(project.getTitle());
 
                     TextView desc = projectView.findViewById(R.id.project_description);
-                    if (desc.length() >= 200) {
+                    if (project.getDescription().length() >= 200) {
                         desc.setText(project.getDescription().substring(0, 200) + "...");
                     } else {
                         desc.setText(project.getDescription());

@@ -26,6 +26,7 @@ public class Jury extends Model {
             Project project;
             for (int i = 0; i < projects.length(); i++) {
                 JSONObject projectObject = projects.getJSONObject(i);
+                projectObject.put("juryId", this.juryId);
                 project = new Project(projectObject);
                 // ajout du projet à la liste
                 this.addProject(project);

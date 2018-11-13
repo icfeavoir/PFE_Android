@@ -41,6 +41,7 @@ import icfeavoir.pfe.proxy.PosterCommentProxy;
 import icfeavoir.pfe.proxy.Proxy;
 
 public class PRJActivity extends PFEActivity {
+    public static final String PROJECT_EXTRA = "project_extra";
 
     private int projectId;
     private TextView title;
@@ -79,9 +80,10 @@ public class PRJActivity extends PFEActivity {
         this.globalNote = -1.0;
 
         try {
-            this.projectId = getIntent().getExtras().getInt("projectId");
+            this.projectId = getIntent().getExtras().getInt(PROJECT_EXTRA);
             this.getProjectInfo(this.projectId);
         } catch (NullPointerException e) {
+            e.printStackTrace();
             this.noProjectException();
         }
     }
@@ -120,7 +122,6 @@ public class PRJActivity extends PFEActivity {
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
         builder.setView(input);
 
-        Log.i("POPUP", "gn " + globalNote);
         if (globalNote >= 0) {
             input.setText(globalNote + "");
         }
@@ -283,6 +284,19 @@ public class PRJActivity extends PFEActivity {
         }
     }
 
+    private void noNoteSaved() {
+        final PFEActivity it = this;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                TextView text = new TextView(it);
+                text.setText("Aucun étudiant enregistré en mode hors connexion pour ce projet.");
+                studentsList.removeAllViews();
+                studentsList.addView(text);
+            }
+        });
+    }
+
     private void setProjectInfo(final Project project) {
         this.project = project;
         runOnUiThread(new Runnable() {
@@ -306,6 +320,10 @@ public class PRJActivity extends PFEActivity {
                         showPosterPopup();
                     }
                 });
+
+                if (! project.hasPoster()) {
+                    posterButton.setVisibility(View.INVISIBLE);
+                }
             }
         });
 
@@ -374,10 +392,15 @@ public class PRJActivity extends PFEActivity {
                     this.posterComment = (String) map.get(possibleDataType.POSTER_COMMENT);
                 }
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
+        } else if(data instanceof ArrayList && ((ArrayList) data).size() == 0) {
+            // no note
+            noNoteSaved();
         } else {
-            this.noProjectException();
+            Log.e("ERR", "DISPLAY DATA : " + data.getClass());
+            Log.e("RECEIVED", data.toString());
+            noProjectException();
         }
     }
 

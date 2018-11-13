@@ -1,6 +1,7 @@
 package icfeavoir.pfe.proxy;
 
 import android.content.Intent;
+import android.util.Log;
 
 import org.json.JSONObject;
 
@@ -24,7 +25,8 @@ public class LOGOUTProxy extends Proxy {
 
     @Override
     void callWithoutInternet(JSONObject json) {
-//        Database.getInstance(this.getContext()).getUserDAO().delete();
+        Log.i("btn", "clicked disco proxy");
+        Database.getInstance(this.getContext()).getUserDAO().delete();
         Intent intent = new Intent(getContext(), LoginActivity.class);
         activity.startActivity(intent);
         activity.finish();

@@ -94,7 +94,7 @@ public class JYINFProxy extends Proxy {
                         studentProjectDBModels.add(new StudentProjectDBModel(p.getStudentId(), project.getProjectId()));
                         studentDBModels.add(new StudentDBModel(p.getStudentId(), p.getForename(), p.getSurname()));
                     }
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -124,7 +124,7 @@ public class JYINFProxy extends Proxy {
             for (int i = 0; i < projectsArr.length(); i++) {
                 JSONObject projectObject = projectsArr.getJSONObject(i);
                 // save juryId because not in api...
-                projectObject.put("jury", juryId);
+                projectObject.put("juryId", juryId);
                 project = new Project(projectObject);
                 // add project to the list
                 alProject.add(project);
