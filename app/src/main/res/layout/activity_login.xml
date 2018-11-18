@@ -40,7 +40,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_email"
+                    android:textColorHint="@color/black"
                     android:text="clavrmic"
+                    android:fontFamily="@style/Roboto"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:singleLine="true" />
@@ -58,6 +60,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
                     android:textColorHint="@color/black"
+                    android:fontFamily="@style/Roboto"
                     android:imeActionId="6"
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
@@ -74,6 +77,7 @@
                 android:padding="2dp"
                 android:hint="@string/error_invalid_id_or_pass"
                 android:textColorHint="@color/white"
+                android:fontFamily="@style/Roboto"
                 android:background="@color/orange"
                 android:gravity="center"
                 android:visibility="invisible"
@@ -85,7 +89,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:textColorHint="@color/black"
                 android:text="@string/action_sign_in"
+                android:fontFamily="@style/Roboto"
                 android:textStyle="bold" />
 
         </LinearLayout>

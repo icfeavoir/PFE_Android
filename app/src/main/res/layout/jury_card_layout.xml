@@ -18,6 +18,7 @@
             android:maxLines="1"
             android:minLines="1"
             android:textColor="@color/white"
+            android:fontFamily="@style/Roboto"
             android:textSize="40sp" />
         <TextView
             android:id="@+id/jury_date"
@@ -26,6 +27,7 @@
             android:layout_weight="1"
             android:padding="2dp"
             android:textColor="@color/white"
+            android:fontFamily="@style/Roboto"
             android:textSize="16sp"
             android:gravity="end"/>
 
