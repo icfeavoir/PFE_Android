@@ -153,7 +153,6 @@ public abstract class Communication extends AsyncTask<String, Void, String> {
                 JSONObject json = new JSONObject(result);
                 this.proxy.checkDataAfterInternet(json);
             } catch (JSONException e) {
-                Log.i("NON JSON RES", result);
                 Log.e("RECEIVED", result);
             }
         }

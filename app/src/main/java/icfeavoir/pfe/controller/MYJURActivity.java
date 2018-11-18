@@ -44,7 +44,6 @@ public class MYJURActivity extends PFEActivity {
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Log.i("", "CLICKED");
                 return false;
             }
         });
@@ -59,7 +58,7 @@ public class MYJURActivity extends PFEActivity {
     public void displayData(Object data) {
         List<Jury> juries = (List<Jury>) data;
         for (final Jury jury : juries) {
-            View juryView = inflater.inflate(R.layout.jury_card_layout, this.layout, false);
+            final View juryView = inflater.inflate(R.layout.jury_card_layout, this.layout, false);
 
             TextView id = juryView.findViewById(R.id.jury_id_title);
             id.setText("Jury n°" + jury.getJuryId());
@@ -74,7 +73,12 @@ public class MYJURActivity extends PFEActivity {
                 }
             });
 
-            layout.addView(juryView);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    layout.addView(juryView);
+                }
+            });
         }
     }
 

@@ -143,7 +143,6 @@ public class LIPRJProxy extends Proxy {
                 final int projectId = this.jsonSent.getInt("projectId");
                 for (Project p : projects) {
                     if (p.getProjectId() == projectId) {
-                        Log.i("", "get the project " + p.getTitle());
                         this.getActivity().displayData(p);
                         return;
                     }

@@ -74,33 +74,33 @@ public class JYINFActivity extends PFEActivity {
             this.noProjectsException();
             return;
         }
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                for (final Project project : projects) {
-                    View projectView = inflater.inflate(R.layout.project_card_layout, layout, false);
 
-                    TextView title = projectView.findViewById(R.id.project_title);
-                    title.setText(project.getTitle());
+        for (final Project project : projects) {
+            final View projectView = inflater.inflate(R.layout.project_card_layout, layout, false);
 
-                    TextView desc = projectView.findViewById(R.id.project_description);
-                    if (project.getDescription().length() >= 200) {
-                        desc.setText(project.getDescription().substring(0, 200) + "...");
-                    } else {
-                        desc.setText(project.getDescription());
-                    }
+            TextView title = projectView.findViewById(R.id.project_title);
+            title.setText(project.getTitle());
 
-                    projectView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            clickProjectCard(project);
-                        }
-                    });
+            TextView desc = projectView.findViewById(R.id.project_description);
+            if (project.getDescription().length() >= 200) {
+                desc.setText(project.getDescription().substring(0, 200) + "...");
+            } else {
+                desc.setText(project.getDescription());
+            }
 
+            projectView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    clickProjectCard(project);
+                }
+            });
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
                     layout.addView(projectView);
                 }
-            }
-        });
+            });
+        }
     }
 
     private void attemptJYINF() {

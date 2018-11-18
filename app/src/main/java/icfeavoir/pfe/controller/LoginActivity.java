@@ -62,28 +62,10 @@ public class LoginActivity extends PFEActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                // TODO REMOVE
-                // FAKE CONNECT WITHOUT INTERNET (use once)
-//                Database.getInstance(getApplicationContext())
-//                        .getUserDAO()
-//                        .insert(new UserDBModel("clavrmic", "4hH9sUFOi2gx"));
                 UserDBModel user = Database.getInstance(getApplicationContext()).getUserDAO().getUser();
                 if (user != null){
                     connect(user.getUsername(), user.getPassword());
                 }
-//                 TODO REMOVE
-//                FAKE CONNECT WITH INTERNET
-//                else {
-//                    LOGONProxy proxy = new LOGONProxy(it);
-//                    JSONObject json = new JSONObject();
-//                    try {
-//                        json.put("user", "clavrmic");
-//                        json.put("pass", "4hH9sUFOi2gx");
-//                        proxy.call(json);
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
             }
         }).start();
 

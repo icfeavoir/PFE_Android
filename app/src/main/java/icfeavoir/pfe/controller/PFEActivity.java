@@ -23,15 +23,6 @@ public abstract class PFEActivity extends AppCompatActivity {
      */
     public abstract void displayData(Object data);
 
-    public void linkNavigationView() {
-        if (navigationView != null) {
-            Log.i("nav", "not null");
-//            navigationView.setNavigationItemSelectedListener(this);
-        } else {
-            Log.i("nav", "NULL");
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +46,6 @@ public abstract class PFEActivity extends AppCompatActivity {
 
     @SuppressWarnings("StatementWithEmptyBody")
     public boolean onNavigationItemSelected(MenuItem item) {
-        Log.i("click", "item clicked");
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -65,7 +55,6 @@ public abstract class PFEActivity extends AppCompatActivity {
         } else if (id == R.id.menu_lijur) {
 
         } else if (id == R.id.menu_logout) {
-            Log.i("btn", "clicked disco");
             LOGOUTProxy proxy = new LOGOUTProxy(this);
             proxy.call();
         }

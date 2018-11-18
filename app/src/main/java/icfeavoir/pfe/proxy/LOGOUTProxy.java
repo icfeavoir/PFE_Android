@@ -25,7 +25,6 @@ public class LOGOUTProxy extends Proxy {
 
     @Override
     void callWithoutInternet(JSONObject json) {
-        Log.i("btn", "clicked disco proxy");
         Database.getInstance(this.getContext()).getUserDAO().delete();
         Intent intent = new Intent(getContext(), LoginActivity.class);
         activity.startActivity(intent);
